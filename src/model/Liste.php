@@ -10,4 +10,8 @@ class Liste extends Model {
     protected $primaryKey = "no";
     protected $table = "liste";
 
+    public function Item(){
+        return $this->hasMany('\model\Item','id');
+    }
+
 }

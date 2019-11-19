@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="MySQL - ProjetPHP@pa1007.fr" uuid="c451297f-c552-44e5-bf62-282a6d54dd93">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://pa1007.fr:3306/ProjetPHP</jdbc-url>
+    </data-source>
+  </component>
+</project>
