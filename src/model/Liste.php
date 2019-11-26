@@ -11,7 +11,7 @@ class Liste extends Model {
     protected $table = "liste";
 
     public function Item(){
-        return $this->hasMany('\model\Item','id');
+        return $this->hasMany('mywhishlist\model\Item','user_id');
     }
 
 }
