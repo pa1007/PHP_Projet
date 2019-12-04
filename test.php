@@ -12,7 +12,7 @@ $db->setAsGlobal();
 $db->bootEloquent();
 $v = Liste::get();
 
-foreach ($v as $item) {
+/*foreach ($v as $item) {
     echo $item;
 }
 echo "\n";
@@ -20,9 +20,10 @@ $vI = Item::get();
 
 foreach ($vI as $item) {
     echo $item;
-}
+}*/
 echo "\n";
-$i = Item::where("id", "=", $_GET['id'])->first();
+
+$i = mywishlist\model\Item::where("id", "=", $_GET['id'])->first();
 echo $i;
 
 $nI = new Item();
