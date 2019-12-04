@@ -33,13 +33,11 @@ class VueParticipant extends \mywishlist\vue\Vue
 $head
 $menu
 <body>
- …
 <div class="content">
  $content
 </div>
-$foot
 </body>
-
+$foot
 END;
         echo $html;
 
