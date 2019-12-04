@@ -40,7 +40,7 @@ abstract class Vue {
 
     protected final function rendufooter() {
         return "  <!-- Footer -->
-  <footer class=\"py-5 bg-black\">
+  <footer class=\"py-5 bg-dark\">
     <div class=\"container\">
       <p class=\"m-0 text-center text-white small\"> &copy; </p>
     </div>
