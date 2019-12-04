@@ -77,5 +77,15 @@ END;
     private function htmlListItem() {
 
     }
-}
 
+    private function renderList(){
+        $l = $this->tableau;
+        foreach ($l->Item as $item) {
+            return <<<END
+
+END;
+
+        }
+
+    }
+}
