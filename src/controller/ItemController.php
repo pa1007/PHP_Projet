@@ -2,28 +2,19 @@
 
 namespace mywishlist\controller;
 
+use mywishlist\model\Item;
 use mywishlist\vue\VueParticipant;
 
 class ItemController {
 
-    public function __construct(){
+    public function __construct() {
 
     }
 
-    public function getItem( $id )
-    {
-        $item = \mywishlist\model\Item::where('id', '=', $id)->first();
+    public function getItem($id) {
+        $item = Item::where('id', '=', $id)->first();
         $v = new VueParticipant($item);
-        $v->render();
+        $v->render(VueParticipant::ITEM);
     }
-
-    /*public function listItem() {
-        $liste = Item::OrderBy('titre')->get() ;
-        $v = new ItemView( $liste , LIST_VIEW ) ;
-        $v->render() ;
-    }
-
-
-*/
 }
 
