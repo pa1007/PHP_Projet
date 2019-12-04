@@ -18,7 +18,7 @@ class VueParticipant extends \mywishlist\vue\Vue
 
     private function htmlListItem(){
 
-}
+    }
 
     public function render()
     {
