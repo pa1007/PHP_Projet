@@ -6,7 +6,7 @@ namespace mywishlist\vue;
 
 abstract class Vue {
 
-    public abstract function render();
+    public abstract function render($sel);
 
     protected final function renduTitre() {
         return "<!DOCTYPE html><html lang='fr'>

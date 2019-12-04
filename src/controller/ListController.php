@@ -4,6 +4,7 @@
 namespace mywishlist\controller;
 
 
+use mywishlist\model\Liste;
 use mywishlist\vue\VueParticipant;
 
 class ListController
@@ -14,9 +15,9 @@ class ListController
 
     public function getList( $no )
     {
-        $list = \mywishlist\model\Liste::where('no', '=', $no)->first();
+        $list = Liste::where('no', '=', $no)->first();
         $v = new VueParticipant($list);
-        $v->render();
+        $v->render(VueParticipant::LISTE);
     }
 
 }
