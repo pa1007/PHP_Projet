@@ -20,6 +20,11 @@ class VueParticipant extends \mywishlist\vue\Vue
 
     }
 
+    public function renderListe(){
+        $v = Liste::get();
+
+    }
+
     public function render()
     {
         $head = parent::renduTitre();
