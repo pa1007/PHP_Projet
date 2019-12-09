@@ -11,19 +11,18 @@ class Liste extends Model {
     protected $table = "liste";
 
 
-    public function Item()
-    {
-        return $this->hasMany('mywhishlist\model\Item', 'user_id');
+    public function Item() {
+        return $this->hasMany('mywishlist\model\Item', 'liste_id');
     }
 
-    public function creerListe($n,$us,$tit,$des,$exp,$tok){
-        $l= new Liste();
+    public function creerListe($n, $us, $tit, $des, $exp, $tok) {
+        $l = new Liste();
         $l->no = $n;
-        $l->user_id=$us;
-        $l->titre=$tit;
-        $l->description=$des;
-        $l->expiration=$exp;
-        $l->token=$tok;
+        $l->user_id = $us;
+        $l->titre = $tit;
+        $l->description = $des;
+        $l->expiration = $exp;
+        $l->token = $tok;
 
         $l->save();
     }

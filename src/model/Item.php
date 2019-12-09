@@ -10,8 +10,8 @@ class Item extends Model {
 
     protected $table = "item";
 
-    public function Liste(){
-        return $this->belongsTo('mywhishlist\model\Liste','liste_id');
+    public function Liste() {
+        return $this->belongsTo('mywishlist\model\Liste', 'liste_id');
     }
 
 }
