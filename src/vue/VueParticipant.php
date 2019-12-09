@@ -19,7 +19,7 @@ class VueParticipant extends Vue {
 
         if ($this->tableau == null) {
             $slim = Slim::getInstance();
-            $slim->redirect("/error");
+            $slim->redirect($slim->urlFor("Error"),301);
             return;
         }
 
@@ -62,6 +62,9 @@ END;
     }
 
     private function renderItemListe($item) {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        $rootUri = $req->getRootUri() . "/item/$item->id";
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">
@@ -73,7 +76,7 @@ END;
                 <h3>$item->descr</h3>
                 <div> $item->tarif €</div>
             <br>
-            <a href="/item/$item->id" class="btn btn-primary btn-smal active" role="button" aria-pressed="false">Plus d'information</a>
+            <a href="$rootUri" class="btn btn-primary btn-smal active" role="button" aria-pressed="false">Plus d'information</a>
             </div>
           </div>
           </div>
@@ -86,9 +89,12 @@ END;
         $lis = $item->Liste;
         $all = "";
         if (!is_null($lis)) {
+            $slim = Slim::getInstance();
+            $req = $slim->request;
+            $url = $req->getRootUri() . "/liste/$lis->no";
             $all = <<<END
             <div class='border border-dark'>
-           <p style="transform: rotate(0);">$lis->titre / Liste numéro <a class='stretched-link' href='/liste/$lis->no'> $lis->no</a></p>
+           <p style="transform: rotate(0);">$lis->titre / Liste numéro <a class='stretched-link' href='$url'> $lis->no</a></p>
            </div>
 END;
         }

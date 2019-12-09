@@ -22,7 +22,7 @@ $app->get('/liste/:no', function ($no) {
 $app->get('/error', function () {
     $vueError = new VueError();
     $vueError->render(1);
-});
+})->setName("Error");
 
 $db = new DB();
 $db->addConnection(parse_ini_file("src/conf/conf.ini"));
