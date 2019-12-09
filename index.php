@@ -6,6 +6,7 @@ use mywishlist\controller\ItemController;
 use mywishlist\controller\ListController;
 use mywishlist\controller\ModifController;
 use mywishlist\vue\VueError;
+use mywishlist\vue\VueIndex;
 use Slim\Slim;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -34,6 +35,11 @@ $app->post("/modif/:type/:token", function ($type, $token) {
     $modifController->modifyItem();
 });
 
+
+$app->get('/', function () {
+    $vueIndex = new VueIndex();
+    $vueIndex->render(1);
+})->setName("Menu");
 
 $db = new DB();
 $db->addConnection(parse_ini_file("src/conf/conf.ini"));
