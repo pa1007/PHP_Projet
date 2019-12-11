@@ -52,12 +52,12 @@ END;
     private function renderList() {
         $tableau = $this->tableau;
         $items = $tableau->Item;
-        $text = "<div><h4>$tableau->titre</h4>
-      <div class=\"mb-4 \"> ";
+        $text = "<div><h3>$tableau->titre</h3><br><h4>$tableau->description</h4>
+      </div class=\"mb-4 \"> ";
         foreach ($items as $item) {
             $text .= $this->renderItemListe($item);
         }
-        $text .= "</div> <h4>$tableau->description</h4> </div>";
+
         return $text;
     }
 
