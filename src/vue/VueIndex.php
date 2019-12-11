@@ -17,7 +17,7 @@ class VueIndex extends Vue
   
   
   
-</ul><div class=\"form-group\" style=\"\"><label>Site créer par Paul-Alexandre Fourrière, Fabien Drommer, Laury Thiebaux et Matthias Froehlicher</label><textarea class=\"form-control\"></textarea></div></body>
+</ul><div class=\"form-group\" style=\"\"><label>Site créé par Paul-Alexandre Fourrière, Fabien Drommer, Laury Thiebaux et Matthias Froehlicher</label><textarea class=\"form-control\"></textarea></div></body>
 </div>" . $foot;
     }
 }

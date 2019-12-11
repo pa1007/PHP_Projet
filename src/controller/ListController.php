@@ -20,4 +20,8 @@ class ListController
         $v->render(VueParticipant::LISTE);
     }
 
+    public function CreerListe($titre, $desc, $datexp){
+
+    }
+
 }
