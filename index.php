@@ -38,6 +38,18 @@ $app->post('/createitem', function () {
     $itemContr->postCreaForm();
 });
 
+$app->get('/createListe',function(){
+    $list = new ListController();
+    $list->seeFormCrea();
+})->setName('creaListe');
+
+$app->post('/createListe',function(){
+    $list=new ListController();
+    $list->postCreaForm();
+    $list->creerListe();
+});
+
+
 $app->get("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->process();
