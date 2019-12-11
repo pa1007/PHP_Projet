@@ -8,6 +8,7 @@ class VueParticipant extends Vue {
 
     const LISTE = 1;
     const ITEM = 2;
+    const ITEM_CREA = 4;
 
     protected $tableau;
 
@@ -16,24 +17,29 @@ class VueParticipant extends Vue {
     }
 
     public function render($sel) {
-
-        if ($this->tableau == null) {
-            $slim = Slim::getInstance();
-            $slim->redirect($slim->urlFor("Error"),301);
-            return;
-        }
-
-
         $head = parent::renduTitre();
         $menu = parent::renduMenu();
         $foot = parent::rendufooter();
 
         switch ($sel) {
             case VueParticipant::LISTE :
+                if ($this->tableau == null) {
+                    $slim = Slim::getInstance();
+                    $slim->redirect($slim->urlFor("Error"), 301);
+                    return;
+                }
                 $content = $this->renderList();
                 break;
             case VueParticipant::ITEM :
+                if ($this->tableau == null) {
+                    $slim = Slim::getInstance();
+                    $slim->redirect($slim->urlFor("Error"), 301);
+                    return;
+                }
                 $content = $this->renderItem();
+                break;
+            case VueParticipant::ITEM_CREA :
+                $content = $this->renderCreatItem();
                 break;
         }
         $html = <<<END
@@ -52,12 +58,12 @@ END;
     private function renderList() {
         $tableau = $this->tableau;
         $items = $tableau->Item;
-        $text = "<div><h3>$tableau->titre</h3><br><h4>$tableau->description</h4>
-      </div class=\"mb-4 \"> ";
+        $text = "<div><h4>$tableau->titre</h4>
+      <div class=\"mb-4 \"> ";
         foreach ($items as $item) {
             $text .= $this->renderItemListe($item);
         }
-
+        $text .= "</div> <h4>$tableau->description</h4> </div>";
         return $text;
     }
 
@@ -117,6 +123,55 @@ END;
 END;
     }
 
+    private function renderCreatItem() {
+        $err = "";
+        if ($this->tableau !== "") {
+            $err = <<<END
+<div class="alert alert-danger" role="alert">
+  $this->tableau
+</div>
+END;
+        }
+
+
+        return <<<END
+$err
+<form class="form-horizontal" method="post" >
+<fieldset>
+<legend>Créez votre item !</legend>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="nom">Nom</label>  
+  <div class="col-md-4">
+  <input id="nom" name="nom" type="text" placeholder="Nom" class="form-control input-md" required="">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Description">Description</label>
+  <div class="col-md-4">                     
+    <textarea class="form-control" id="Description" name="Description"></textarea>
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="prix">Prix</label>  
+  <div class="col-md-4">
+  <input id="prix" name="number" type="number" step="any" placeholder="prix" class="form-control input-md">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="urlExter">URL Externe d'explication</label>  
+  <div class="col-md-4">
+  <input id="urlExter" name="urlExter" type="url" placeholder="URL" class="form-control input-md">
+  </div>
+</div>
+<div class="form-group">
+  <div class="col-md-4">
+    <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit"/>
+  </div>
+</div>
+</fieldset>
+</form>
+END;
+    }
 
 }
 

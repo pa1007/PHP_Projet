@@ -26,11 +26,13 @@ $app->get('/error', function () {
     $vueError->render(1);
 })->setName("Error");
 
+//Recupere le formulaire et l'affiche
 $app->get('/createitem', function () {
     $itemContr = new ItemController();
     $itemContr->seeFormCrea();
 })->setName('creaItem');
 
+//Recupérer la reponse au formulaire
 $app->post('/createitem', function () {
     $itemContr = new ItemController();
     $itemContr->postCreaForm();
