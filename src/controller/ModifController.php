@@ -100,7 +100,10 @@ class ModifController {
             setcookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
             $slim->redirect($req->getResourceUri(), 302);
         }
+    }
 
-
+    private function liste() {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
     }
 }

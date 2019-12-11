@@ -12,10 +12,8 @@ use Slim\Slim;
 class ListController
 {
 
-    private $token;
 
-    public function __construct($tok){
-    $this->token=$tok;
+    public function __construct(){
     }
 
     public function getList( $no )

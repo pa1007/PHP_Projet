@@ -9,6 +9,7 @@ class VueParticipant extends Vue {
     const LISTE = 1;
     const ITEM = 2;
     const ITEM_CREA = 4;
+    const LIST_CREA = 5;
 
     protected $tableau;
 
@@ -40,6 +41,9 @@ class VueParticipant extends Vue {
                 break;
             case VueParticipant::ITEM_CREA :
                 $content = $this->renderCreatItem();
+                break;
+            case VueParticipant::LIST_CREA :
+                $content = $this->renderCreateList();
                 break;
         }
         $html = <<<END
@@ -172,6 +176,10 @@ $err
 </form>
 END;
     }
+
+    private function renderCreateList(){
+
+}
 
 }
 
