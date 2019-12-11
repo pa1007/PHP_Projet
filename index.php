@@ -10,7 +10,7 @@ use mywishlist\vue\VueIndex;
 use Slim\Slim;
 
 require_once __DIR__ . '/vendor/autoload.php';
-
+session_start();
 $app = new Slim;
 $app->get('/item/:id', function ($id) {
     $itemController = new ItemController();
@@ -25,6 +25,16 @@ $app->get('/error', function () {
     $vueError = new VueError();
     $vueError->render(1);
 })->setName("Error");
+
+$app->get('/createitem', function () {
+    $itemContr = new ItemController();
+    $itemContr->seeFormCrea();
+})->setName('creaItem');
+
+$app->post('/createitem', function () {
+    $itemContr = new ItemController();
+    $itemContr->postCreaForm();
+});
 
 $app->get("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
