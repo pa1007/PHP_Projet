@@ -6,6 +6,7 @@ namespace mywishlist\vue;
 
 use mywishlist\model\Item;
 use mywishlist\model\Liste;
+use Slim\Slim;
 
 class VueModif extends Vue {
 
@@ -26,12 +27,25 @@ class VueModif extends Vue {
         $menu = parent::renduMenu();
         $foot = parent::rendufooter();
         $cont = "";
+        if (isset($_COOKIE['Error'])) {
+            $cont = $_COOKIE['Error'];
+            $cont = <<<END
+    <div class="alert alert-danger" role="alert">
+     $cont 
+    </div>
+END;
+        }
+
         switch ($sel) {
             case self::ITEM:
-                $cont = $this->renderItem();
+                $cont .= $this->renderItem();
                 break;
             case self::LISTE:
-                $cont = $this->renderListe();
+                $cont .= $this->renderListe();
+                break;
+            default :
+                $slim = Slim::getInstance();
+                $slim->redirect($slim->urlFor("Error"), 301);
                 break;
         }
         $html = <<<END
@@ -49,7 +63,7 @@ END;
         $u = Item::where('modifToken', "=", $this->token)->first();
         $sel = $this->generateSel($u->liste_id);
         return <<<END
-<form class="form-horizontal">
+<form class="form-horizontal" method="post">
 <fieldset>
 <legend>Modification d'objet</legend>
 <div class="form-group">
@@ -91,14 +105,20 @@ END;
   </div>
 </div>
 <div class="form-group">
-  <label class="col-md-4 control-label" for="submit"></label>
   <div class="col-md-4">
-    <input id="submit" name="submit" class="btn btn-primary" type="submit"/>
+    <input id="submit" name="submit" class="btn btn-success" type="submit"/>
   </div>
 </div>
 </fieldset>
 </form>
-
+<form method="post" class="form-horizontal">
+<input type="hidden" name="_METHOD" value="DELETE"/> <!--https://docs.slimframework.com/routing/delete/ -->
+<div class="form-group">
+  <div class="col-md-4">
+     <input class="btn btn-danger" value="Supprimer" type="submit"/>
+  </div>    
+</div>
+</form>
 END;
 
     }
