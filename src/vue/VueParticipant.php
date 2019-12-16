@@ -2,7 +2,6 @@
 
 namespace mywishlist\vue;
 
-use mywishlist\model\Liste;
 use Slim\Slim;
 
 class VueParticipant extends Vue {
@@ -109,12 +108,11 @@ END;
            <p style="transform: rotate(0);">$lis->titre / Liste numéro <a class='stretched-link' href='$url'> $lis->no</a></p>
            </div>
 END;
-
         }
         $form = <<<END
             <p>Item reservé</p>
 END;
-        if(is_null($reserv)) {
+        if (is_null($reserv)) {
             $form = <<<END
             <form class="form-horizontal" method="POST">
               <fieldset>
@@ -202,11 +200,18 @@ $err
 END;
     }
 
-    private function renderCreateList(){
-        $u = Liste::where('modifToken', "=", $this->token)->first();
-        $sel = $this->generateSel($u->liste_id);
+    private function renderCreateList() {
+        $err = "";
+        if ($this->tableau !== "") {
+            $err = <<<END
+<div class="alert alert-danger" role="alert">
+  $this->tableau
+</div>
+END;
+        }
         return <<<END
-<form class="form-horizontal">
+$err
+<form class="form-horizontal" method="post">
 <fieldset>
 
 <!-- Form Name -->
@@ -216,7 +221,7 @@ END;
 <div class="form-group">
   <label class="col-md-4 control-label" for="textinput">Nom de la Liste</label>  
   <div class="col-md-4">
-  <input id="textinput" name="textinput" type="text" placeholder="nom" class="form-control input-md" required="">
+  <input id="textinput" name="titre" type="text" placeholder="nom" class="form-control input-md" required="">
     
   </div>
 </div>
@@ -254,8 +259,6 @@ END;
 END;
 
     }
-
-
 
 
 }

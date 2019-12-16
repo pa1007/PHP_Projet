@@ -19,14 +19,14 @@ class ItemController {
         $v->render(VueParticipant::ITEM);
     }
 
-    public function reserverItem($id){
+    public function reserverItem($id) {
         $item = Item::where('id', '=', $id)->first();
         $res = Reservation::where('idItem', '=', $id)->first();
-        if(is_null($res)){
-            if(isset($_POST['nomUtilisateur'])){
+        if (is_null($res)) {
+            if (isset($_POST['nomUtilisateur'])) {
                 $r = new Reservation();
                 $r->idItem = $id;
-                $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'],FILTER_SANITIZE_SPECIAL_CHARS);
+                $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $r->save();
             }
         }
@@ -51,7 +51,7 @@ class ItemController {
         $slim = Slim::getInstance();
         $it = 0;
         if (isset($_POST['nom']) && $_POST["nom"] !== "" && isset($_POST["Description"]) && $_POST["Description"] !== "" && isset($_POST["number"])
-            && $_POST["number"] !== "" && isset($_POST['singlebutton']) && $_POST['singlebutton'] === "Submit") {
+            && $_POST["number"] !== "" && isset($_POST['singlebutton']) && ($_POST['singlebutton'] === "Submit" || $_POST['singlebutton'] === "Envoyer")) {
             $item = new Item();
             $item->nom = filter_var($_POST['nom'], FILTER_SANITIZE_SPECIAL_CHARS);
             $item->descr = filter_var($_POST['Description'], FILTER_SANITIZE_SPECIAL_CHARS);
@@ -62,17 +62,15 @@ class ItemController {
             $item->liste_id = 0;
             $item->modifToken = bin2hex(openssl_random_pseudo_bytes(32));
             $item->save();
-            $it = $item->id;
             $_SESSION['token'][] = $item->modifToken;
+            $req = $slim->request;
+            $url = $req->getRootUri() . "/modif/item/$item->modifToken";
+            $slim->redirect($url, 302);
 
         } else {
             setcookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
             $slim->redirect($slim->urlFor("creaItem"), 302);
         }
-        $req = $slim->request;
-        $url = $req->getRootUri() . "/item/$it";
-        $slim->redirect($url, 302);
-
     }
 }
 
