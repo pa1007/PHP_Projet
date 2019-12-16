@@ -59,6 +59,10 @@ $app->post("/modif/:type/:token", function ($type, $token) {
     $modifController->modifyItem();
 });
 
+$app->post("/item/:id", function($id){
+    $reserv = new ItemController();
+    $reserv->reserverItem($id);
+});
 
 $app->get('/', function () {
     $vueIndex = new VueIndex();

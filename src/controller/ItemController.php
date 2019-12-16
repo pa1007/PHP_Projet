@@ -19,6 +19,24 @@ class ItemController {
         $v->render(VueParticipant::ITEM);
     }
 
+    public function reserverItem($id){
+        $item = Item::where('id', '=', $id)->first();
+        $res = Reservation::where('idItem', '=', $id)->first();
+        if(is_null($res)){
+            if(isset($_POST['nomUtilisateur'])){
+                $r = new Reservation();
+                $r->idItem = $id;
+                $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'],FILTER_SANITIZE_SPECIAL_CHARS);
+                $r->save();
+            }
+        }
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        $url = $req->getRootUri() . "/item/$item->id";
+        $slim->redirect($url, 302);
+
+    }
+
     public function seeFormCrea() {
         $msg = "";
         if (isset($_COOKIE['Error'])) {

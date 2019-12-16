@@ -98,6 +98,7 @@ END;
     private function renderItem() {
         $item = $this->tableau;
         $lis = $item->Liste;
+        $reserv = $item->Reservation;
         $all = "";
         if (!is_null($lis)) {
             $slim = Slim::getInstance();
@@ -108,6 +109,26 @@ END;
            <p style="transform: rotate(0);">$lis->titre / Liste numéro <a class='stretched-link' href='$url'> $lis->no</a></p>
            </div>
 END;
+            $form = <<<END
+            <p>Item reservé</p>
+END;
+            if(is_null($reserv)) {
+                $form = <<<END
+            <form class="form-horizontal" method="POST">
+              <fieldset>
+                <legend>Reservation</legend>
+                  <div class="form-group">
+                    <label class="col-md-4 control-label" for="nomUtilisateur">Utilisateur</label>  
+                      <div class="col-md-4">
+                      <input name="nomUtilisateur" class="form-control input-md" id="nomUtilisateur" type="text" placeholder="nom">
+    
+                      </div>
+                  </div>
+
+              </fieldset>
+            </form>
+END;
+            }
         }
         return <<<END
         <div class="card mb-4 box-shadow">
@@ -121,6 +142,8 @@ END;
                 <div> $item->tarif €</div>
             <br>
              $all
+             <br>
+             $form
             </div>
           </div>
           </div>
@@ -230,6 +253,8 @@ END;
 END;
 
     }
+
+
 
 
 }
