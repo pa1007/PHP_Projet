@@ -4,6 +4,7 @@
 namespace mywishlist\controller;
 
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\model\Item;
 use mywishlist\model\Liste;
 use mywishlist\vue\VueModif;
@@ -65,22 +66,40 @@ class ModifController {
 
     public function modifyItem() {
         $slim = Slim::getInstance();
-        switch ($this->type) {
-            case "liste":
-                break;
-            case "item":
-                $this->item();
-                break;
-            default:
-                $slim->redirect($slim->urlFor('Error'), 301);
-                break;
+        try {
+            switch ($this->type) {
+                case "liste":
+                    if ($this->testToken()) {
+                        $this->liste();
+                    } else {
+                        $slim->redirect($slim->urlFor('Error'), 301);
+                    }
+                    break;
+                case "item":
+                    if ($this->testToken()) {
+                        $this->item();
+                    } else {
+                        $slim->redirect($slim->urlFor('Error'), 301);
+                    }
+                    break;
+                default:
+                    $slim->redirect($slim->urlFor('Error'), 301);
+                    break;
+            }
+        } catch (ModelNotFoundException $e) {
+            $slim->redirect($slim->urlFor('Error'), 301);
         }
     }
 
-    private function item() {
+    private function liste() {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        $item = Item::where("modifToken", "=", $this->token)->first();
+    }
+
+    private function item() {
+        $item = Item::where("modifToken", "=", $this->token)->firstOrFail();
+        $slim = Slim::getInstance();
+        $req = $slim->request;
         $nomP = $_POST['nom'];
         $descriptionP = $_POST['Description'];
         $numberP = $_POST['number'];
@@ -102,8 +121,36 @@ class ModifController {
         }
     }
 
-    private function liste() {
+    public function delete() {
         $slim = Slim::getInstance();
         $req = $slim->request;
+        try {
+            switch ($this->type) {
+                case "liste":
+                    if ($this->testToken()) {
+                        $list = Liste::where("modifToken", "=", $this->token)->firstOrFail();
+                        $list->delete();
+                        $slim->redirect($slim->urlFor('Menu'), 302);
+                    } else {
+                        $slim->redirect($slim->urlFor('Error'), 30);
+                    }
+                    break;
+                case "item":
+                    if ($this->testToken()) {
+                        $item = Item::where("modifToken", "=", $this->token)->firstOrFail();
+                        $item->delete();
+                        $slim->redirect($slim->urlFor('Menu'), 302);
+                    } else {
+                        $slim->redirect($slim->urlFor('Error'), 301);
+                    }
+                    break;
+                default:
+                    $slim->redirect($slim->urlFor('Error'), 301);
+                    break;
+            }
+        } catch (ModelNotFoundException $e) {
+            $slim->redirect($slim->urlFor('Error'), 301);
+        }
+
     }
 }
