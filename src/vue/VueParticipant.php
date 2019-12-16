@@ -2,6 +2,7 @@
 
 namespace mywishlist\vue;
 
+use mywishlist\model\Liste;
 use Slim\Slim;
 
 class VueParticipant extends Vue {
@@ -178,8 +179,58 @@ END;
     }
 
     private function renderCreateList(){
+        $u = Liste::where('modifToken', "=", $this->token)->first();
+        $sel = $this->generateSel($u->liste_id);
+        return <<<END
+<form class="form-horizontal">
+<fieldset>
 
-}
+<!-- Form Name -->
+<legend>Création de Liste</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="textinput">Nom de la Liste</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="textinput" type="text" placeholder="nom" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Description">Description</label>  
+  <div class="col-md-4">
+  <input id="Description" name="Description" type="text" placeholder="description" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="date">Date d'expiration</label>  
+  <div class="col-md-4">
+  <input id="date" name="date" type="date" placeholder="date" class="form-control input-md" required="">
+  <span class="help-block">Rentrez une date au format JJ/MM/YYYY</span>  
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="valider">Validation</label>
+  <div class="col-md-4">
+    <button id="valider" name="valider" class="btn btn-primary">Valider</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+
+END;
+
+    }
+
 
 }
 
