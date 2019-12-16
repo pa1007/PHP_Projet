@@ -109,11 +109,13 @@ END;
            <p style="transform: rotate(0);">$lis->titre / Liste numéro <a class='stretched-link' href='$url'> $lis->no</a></p>
            </div>
 END;
-            $form = <<<END
+
+        }
+        $form = <<<END
             <p>Item reservé</p>
 END;
-            if(is_null($reserv)) {
-                $form = <<<END
+        if(is_null($reserv)) {
+            $form = <<<END
             <form class="form-horizontal" method="POST">
               <fieldset>
                 <legend>Reservation</legend>
@@ -128,7 +130,6 @@ END;
               </fieldset>
             </form>
 END;
-            }
         }
         return <<<END
         <div class="card mb-4 box-shadow">
