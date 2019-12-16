@@ -141,5 +141,52 @@ END;
     }
 
     private function renderListe(){
+        $u = Liste::where('modifToken', "=", $this->token)->first();
+        return <<<END
+<form class="form-horizontal">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Modifie les informations générales de ta liste !</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="titreListe">Titre</label>  
+  <div class="col-md-4">
+  <input id="titreListe" name="titreListe" type="text" placeholder="" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="descriptionListe">Description</label>
+  <div class="col-md-4">                     
+    <textarea class="form-control" id="descriptionListe" name="descriptionListe"></textarea>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="dateEcheanceListe">Date d'échéance</label>  
+  <div class="col-md-4">
+  <input id="dateEcheanceListe" name="dateEcheanceListe" type="date" placeholder="" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="butValider"></label>
+  <div class="col-md-4">
+    <button id="butValider" name="butValider" class="btn btn-primary">Valider</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+END;
+
     }
 }

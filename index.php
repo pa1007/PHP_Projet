@@ -56,7 +56,7 @@ $app->get("/modif/:type/:token", function ($type, $token) {
 });
 $app->post("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
-    $modifController->modifyItem();
+    $modifController->modify();
 });
 
 $app->post("/item/:id", function($id){

@@ -64,20 +64,20 @@ class ModifController {
     }
 
 
-    public function modifyItem() {
+    public function modify() {
         $slim = Slim::getInstance();
         try {
             switch ($this->type) {
                 case "liste":
                     if ($this->testToken()) {
-                        $this->liste();
+                        $this->modifyListe();
                     } else {
                         $slim->redirect($slim->urlFor('Error'), 301);
                     }
                     break;
                 case "item":
                     if ($this->testToken()) {
-                        $this->item();
+                        $this->modifyItem();
                     } else {
                         $slim->redirect($slim->urlFor('Error'), 301);
                     }
@@ -91,15 +91,10 @@ class ModifController {
         }
     }
 
-    private function liste() {
+    private function modifyItem() {
         $slim = Slim::getInstance();
         $req = $slim->request;
-    }
-
-    private function item() {
-        $item = Item::where("modifToken", "=", $this->token)->firstOrFail();
-        $slim = Slim::getInstance();
-        $req = $slim->request;
+        $item = Item::where("modifToken", "=", $this->token)->first();
         $nomP = $_POST['nom'];
         $descriptionP = $_POST['Description'];
         $numberP = $_POST['number'];
@@ -121,6 +116,27 @@ class ModifController {
         }
     }
 
+    private function modifyListe() {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        $liste = Liste::where("modifToken", "=", $this->token)->first();
+        $titre = $_POST['titreListe'];
+        $description = $_POST['descriptionListe'];
+        $dateEch = $_POST['dateEcheanceListe'];
+        $butValider = $_POST['valider'];
+        if ($titre !== "" && $description !== "" && $dateEch !== "" && $butValider === 'submit') {
+            $liste->titre = filter_var($titre, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->description = filter_var($description, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->expiration = filter_var($dateEch, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->save();
+            $url = $req->getRootUri() . "/liste/$liste->id";
+            $slim->redirect($url, 302);
+        } else {
+            setCookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
+            $slim->redirect($req->getResourceUri(), 302);
+        }
+
+    }
     public function delete() {
         $slim = Slim::getInstance();
         $req = $slim->request;
