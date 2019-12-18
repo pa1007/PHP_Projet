@@ -95,9 +95,9 @@ class ModifController {
         $slim = Slim::getInstance();
         $req = $slim->request;
         $item = Item::where("modifToken", "=", $this->token)->first();
-        $nomP = $_POST['nom'];
-        $descriptionP = $_POST['Description'];
-        $numberP = $_POST['number'];
+        $nomP = $_POST['name'];
+        $descriptionP = $_POST['description'];
+        $numberP = $_POST['tarif'];
         $listP = $_POST['listes'];
         $butP = $_POST['submit'];
         if ($nomP !== "" && $descriptionP !== "" && $numberP !== "" && $listP !== "" && $butP === 'submit') {

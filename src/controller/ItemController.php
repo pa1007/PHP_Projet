@@ -51,7 +51,7 @@ class ItemController {
         $slim = Slim::getInstance();
         $it = 0;
         if (isset($_POST['nom']) && $_POST["nom"] !== "" && isset($_POST["Description"]) && $_POST["Description"] !== "" && isset($_POST["number"])
-            && $_POST["number"] !== "" && isset($_POST['singlebutton']) && ($_POST['singlebutton'] === "Submit" || $_POST['singlebutton'] === "Envoyer")) {
+            && $_POST["number"] !== "" && isset($_POST['singlebutton']) ) {
             $item = new Item();
             $item->nom = filter_var($_POST['nom'], FILTER_SANITIZE_SPECIAL_CHARS);
             $item->descr = filter_var($_POST['Description'], FILTER_SANITIZE_SPECIAL_CHARS);
