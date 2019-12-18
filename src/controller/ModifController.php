@@ -103,7 +103,7 @@ class ModifController {
         if ($nomP !== "" && $descriptionP !== "" && $numberP !== "" && $listP !== "") {
             $item->nom = filter_var($nomP, FILTER_SANITIZE_SPECIAL_CHARS);
             $item->descr = filter_var($descriptionP, FILTER_SANITIZE_SPECIAL_CHARS);
-            $item->tarif = filter_var($numberP, FILTER_SANITIZE_NUMBER_FLOAT);
+            $item->tarif = filter_input(INPUT_POST, 'tarif', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             $item->liste_id = filter_var($listP, FILTER_SANITIZE_NUMBER_INT);
             $item->img = filter_var($_POST['Image'], FILTER_SANITIZE_URL);
             $item->url = filter_var($_POST['urlEx'], FILTER_SANITIZE_URL);
@@ -112,7 +112,8 @@ class ModifController {
             $slim->redirect($url, 302);
         } else {
             setcookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
-            $slim->redirect($req->getResourceUri(), 302);
+            $url = $req->getRootUri() . "/modif/$this->type/$this->token";
+            $slim->redirect($url, 302);
         }
     }
 
@@ -148,7 +149,7 @@ class ModifController {
                         $list->delete();
                         $slim->redirect($slim->urlFor('Menu'), 302);
                     } else {
-                        $slim->redirect($slim->urlFor('Error'), 30);
+                        $slim->redirect($slim->urlFor('Error'), 301);
                     }
                     break;
                 case "item":

@@ -38,13 +38,13 @@ $app->post('/createitem', function () {
     $itemContr->postCreaForm();
 });
 
-$app->get('/createListe',function(){
+$app->get('/createliste', function () {
     $list = new ListController();
     $list->seeFormCrea();
 })->setName('creaListe');
 
-$app->post('/createListe',function(){
-    $list=new ListController();
+$app->post('/createliste', function () {
+    $list = new ListController();
     $list->postCreaForm();
     $list->creerListe();
 });
@@ -57,6 +57,10 @@ $app->get("/modif/:type/:token", function ($type, $token) {
 $app->post("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->modify();
+});
+$app->delete("/modif/:type/:token", function ($type, $token) {
+    $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
+    $modifController->delete();
 });
 
 $app->post("/item/:id", function($id){

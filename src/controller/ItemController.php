@@ -49,13 +49,12 @@ class ItemController {
 
     public function postCreaForm() {
         $slim = Slim::getInstance();
-        $it = 0;
         if (isset($_POST['nom']) && $_POST["nom"] !== "" && isset($_POST["Description"]) && $_POST["Description"] !== "" && isset($_POST["number"])
             && $_POST["number"] !== "" && isset($_POST['singlebutton']) ) {
             $item = new Item();
             $item->nom = filter_var($_POST['nom'], FILTER_SANITIZE_SPECIAL_CHARS);
             $item->descr = filter_var($_POST['Description'], FILTER_SANITIZE_SPECIAL_CHARS);
-            $item->tarif = filter_var($_POST['number'], FILTER_SANITIZE_NUMBER_FLOAT);
+            $item->tarif = filter_input(INPUT_POST, 'number', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             if (isset($_POST['urlExter'])) {
                 $item->url = filter_var($_POST['urlExter'], FILTER_SANITIZE_URL);
             }
