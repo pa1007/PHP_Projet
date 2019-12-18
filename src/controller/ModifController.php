@@ -100,7 +100,7 @@ class ModifController {
         $numberP = $_POST['tarif'];
         $listP = $_POST['listes'];
         $butP = $_POST['submit'];
-        if ($nomP !== "" && $descriptionP !== "" && $numberP !== "" && $listP !== "" && $butP === 'submit') {
+        if ($nomP !== "" && $descriptionP !== "" && $numberP !== "" && $listP !== "") {
             $item->nom = filter_var($nomP, FILTER_SANITIZE_SPECIAL_CHARS);
             $item->descr = filter_var($descriptionP, FILTER_SANITIZE_SPECIAL_CHARS);
             $item->tarif = filter_var($numberP, FILTER_SANITIZE_NUMBER_FLOAT);
