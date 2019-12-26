@@ -2,6 +2,7 @@
 
 
 use Illuminate\Database\Capsule\Manager as DB;
+use mywishlist\controller\CompteController;
 use mywishlist\controller\ItemController;
 use mywishlist\controller\ListController;
 use mywishlist\controller\ModifController;
@@ -46,9 +47,17 @@ $app->get('/createliste', function () {
 $app->post('/createliste', function () {
     $list = new ListController();
     $list->postCreaForm();
-    $list->creerListe();
 });
 
+$app->get("/createcompte", function () {
+    $compteController = new CompteController();
+    $compteController->compteCrea();
+})->setName("createcompte");
+
+$app->post("/createcompte", function () {
+    $compteController = new CompteController();
+    $compteController->postCompteCrea();
+});
 
 $app->get("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
@@ -63,9 +72,29 @@ $app->delete("/modif/:type/:token", function ($type, $token) {
     $modifController->delete();
 });
 
-$app->post("/item/:id", function($id){
+$app->post("/item/:id", function ($id) {
     $reserv = new ItemController();
     $reserv->reserverItem($id);
+});
+
+$app->get('/connect', function () {
+    $cCont = new CompteController();
+    $cCont->formConn();
+})->setName('connect');
+
+$app->post('/connect', function () {
+    $cCont = new CompteController();
+    $cCont->auth();
+});
+
+$app->get('/connected/', function () {
+    $cCont = new CompteController();
+    $cCont->connected();
+})->setName('compteco');
+
+$app->get('/logout', function () {
+    $cCont = new CompteController();
+    $cCont->logout();
 });
 
 $app->get('/', function () {
