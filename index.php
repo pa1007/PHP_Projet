@@ -92,6 +92,10 @@ $app->get('/connected/', function () {
     $cCont->connected();
 })->setName('compteco');
 
+$app->post("/connected/addModif", function () {
+    $cCont = new CompteController();
+    $cCont->addToken();
+});
 $app->get('/logout', function () {
     $cCont = new CompteController();
     $cCont->logout();

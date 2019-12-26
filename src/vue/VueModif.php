@@ -115,7 +115,7 @@ END;
 <input type="hidden" name="_METHOD" value="DELETE"/> <!--https://docs.slimframework.com/routing/delete/ -->
 <div class="form-group">
   <div class="col-md-4">
-     <input class="btn btn-danger" value="Supprimer" type="submit"/>
+     <input class="btn btn-danger" role="button" value="Supprimer" type="submit"/>
   </div>    
 </div>
 </form>
@@ -140,10 +140,10 @@ END;
         return $ret;
     }
 
-    private function renderListe(){
+    private function renderListe() {
         $u = Liste::where('modifToken', "=", $this->token)->first();
         return <<<END
-<form class="form-horizontal">
+<form class="form-horizontal" method="post">
 <fieldset>
 
 <!-- Form Name -->
@@ -153,7 +153,7 @@ END;
 <div class="form-group">
   <label class="col-md-4 control-label" for="titreListe">Titre</label>  
   <div class="col-md-4">
-  <input id="titreListe" name="titreListe" type="text" placeholder="" class="form-control input-md">
+  <input id="titreListe" name="titreListe" type="text" placeholder="" class="form-control input-md" value="$u->titre">
     
   </div>
 </div>
@@ -162,7 +162,7 @@ END;
 <div class="form-group">
   <label class="col-md-4 control-label" for="descriptionListe">Description</label>
   <div class="col-md-4">                     
-    <textarea class="form-control" id="descriptionListe" name="descriptionListe"></textarea>
+    <textarea class="form-control" id="descriptionListe" name="descriptionListe">$u->description</textarea>
   </div>
 </div>
 
@@ -170,7 +170,7 @@ END;
 <div class="form-group">
   <label class="col-md-4 control-label" for="dateEcheanceListe">Date d'échéance</label>  
   <div class="col-md-4">
-  <input id="dateEcheanceListe" name="dateEcheanceListe" type="date" placeholder="" class="form-control input-md">
+  <input id="dateEcheanceListe" name="dateEcheanceListe" type="date" placeholder="" class="form-control input-md" value="$u->expiration">
     
   </div>
 </div>

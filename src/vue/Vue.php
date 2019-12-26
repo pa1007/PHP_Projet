@@ -4,6 +4,8 @@
 namespace mywishlist\vue;
 
 
+use Slim\Slim;
+
 abstract class Vue {
 
     public abstract function render($sel);
@@ -23,6 +25,7 @@ abstract class Vue {
     }
 
     protected final function renduMenu() {
+        $url = $this->generateLink();
         return " <div class=\"d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow\">
       <h5 class=\"my-0 mr-md-auto font-weight-normal\">My Wish List</h5>
       <nav class=\"my-2 my-md-0 mr-md-3\">
@@ -31,8 +34,22 @@ abstract class Vue {
         <a class=\"p-2 text-dark\" href=\"#\">Page 3</a>
         <a class=\"p-2 text-dark\" href=\"#\">Page 4</a>
       </nav>
-      <a class=\"btn btn-outline-primary\" href=\"#\">Connexion</a>
+      $url
     </div>";
+    }
+
+    private final function generateLink() {
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        if (!array_key_exists("id", $_SESSION)) {
+            $url = $request->getRootUri() . "/connect";
+            $url = "<a class=\"btn btn-outline-primary\" href=\"$url\">Connexion</a>";
+        } else {
+            $name = $_SESSION['id']['login'];
+            $t = $request->getRootUri() . '/connected';
+            $url = "<a class='class=\"p-2 text-dark\"' href='$t'>Bienvenue $name</a>";
+        }
+        return $url;
     }
 
     protected final function rendufooter() {

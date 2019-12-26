@@ -4,11 +4,15 @@ namespace mywishlist\vue;
 
 use Slim\Slim;
 
-class VueCompte extends Vue {
+class   VueCompte extends Vue {
 
     const CREA = 1;
     const LOGIN = 2;
+    const AUFMODIFCOMPTE = 31;
+    const AUFSEELISTES = 32;
+    const NORMAL = 30;
     private $message;
+    private $listes;
 
     public function __construct($message = "") { $this->message = $message; }
 
@@ -28,6 +32,15 @@ END;
             case self::LOGIN:
                 $cont .= $this->renderLog();
                 break;
+            case self::AUFMODIFCOMPTE:
+                $cont .= $this->renderAufModifCompte();
+                break;
+            case self::AUFSEELISTES:
+                $cont .= $this->renderAufListes();
+                break;
+            case self::NORMAL:
+                $cont .= $this->renderAufMenu();
+                break;
         }
         $head = parent::renduTitre();
         $menu = parent::renduMenu();
@@ -44,6 +57,7 @@ END;
     }
 
     private function renderForm() {
+
         return <<<END
 <form method="post">
 <legend>Créer votre compte utilisateur !</legend>
@@ -111,4 +125,99 @@ END;
 </form>
 END;
     }
+
+    private function renderAufModifCompte() {
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getPath();
+        $urlLogout = $request->getRootUri() . "/logout";
+        return <<<END
+<div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+      <a class="nav-link " href="$url?page= " role="tab">Page Principal</a>
+      <a class="nav-link active"  href="$url?page=modif" role="tab">Modifier compte</a>
+      <a class="nav-link"  href="$url?page=listes" role="tab">Listes liée au compte</a>
+      <a class="nav-link"  href="$urlLogout" role="tab">Déconnexion</a>
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div>
+      
+</div>
+    </div>
+  </div>
+</div>
+END;
+    }
+
+    private function renderAufListes() {
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getPath();
+        $rootUri = $request->getRootUri();
+        $urlLogout = $rootUri . "/logout";
+        $formURL = $rootUri . "/connected/addModif";
+        return <<<END
+<div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+      <a class="nav-link " href="$url?page= " role="tab">Page Principal</a>
+      <a class="nav-link"  href="$url?page=modif" role="tab">Modifier compte</a>
+      <a class="nav-link active"  href="$url?page=listes" role="tab">Listes liée au compte</a>
+      <a class="nav-link"  href="$urlLogout" role="tab">Déconnexion</a>
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div>
+      <div class='row'>
+      $this->listes
+       <div class="form">
+          <form class="form-check" method="post" action="$formURL">
+          <label><h5>Ajoutez un token de modification</h5></label>
+		  <div><input name="modifTokAdd" type="text" class="form-control" placeholder="token"/></div>
+		  <div><input type="submit"></div>
+          </form>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+END;
+    }
+
+    private function renderAufMenu() {
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getPath();
+        $urlLogout = $request->getRootUri() . "/logout";
+        return <<<END
+<div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+      <a class="nav-link active" href="$url?page= " role="tab">Page Principal</a>
+      <a class="nav-link"  href="$url?page=modif" role="tab">Modifier compte</a>
+      <a class="nav-link"  href="$url?page=listes" role="tab">Listes liée au compte</a>
+      <a class="nav-link"  href="$urlLogout" role="tab">Déconnexion</a>
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div>
+      
+</div>
+    </div>
+  </div>
+</div>
+END;
+
+    }
+
+    public function addListe($listes) {
+        $this->listes = $listes;
+    }
+
 }

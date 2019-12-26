@@ -39,8 +39,10 @@ class ListController {
             $list->description = filter_var($_POST['Description'], FILTER_SANITIZE_SPECIAL_CHARS);
             $list->expiration = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
             $list->modifToken = bin2hex(openssl_random_pseudo_bytes(32));
+            if (isset($_SESSION['id'])) {
+                $list->user_id = $_SESSION['id']['uid'];
+            }
             $list->save();
-            $it = $list->id;
             $_SESSION['token'][] = $list->modifToken;
             $req = $slim->request;
             $url = $req->getRootUri() . "/modif/liste/$list->modifToken";

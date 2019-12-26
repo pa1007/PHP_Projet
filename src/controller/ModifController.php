@@ -7,6 +7,7 @@ namespace mywishlist\controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\model\Item;
 use mywishlist\model\Liste;
+use mywishlist\model\User;
 use mywishlist\vue\VueModif;
 use Slim\Slim;
 
@@ -60,6 +61,18 @@ class ModifController {
                 }
             }
         }
+        if (isset($_SESSION['id'])) {
+            try {
+                $id = User::where('uid', '=', $_SESSION['id']['uid'])->firstOrFail();
+                foreach ($id->listes as $item) {
+                    if ($item->modifToken === $this->token) {
+                        return true;
+                    }
+                }
+            } catch (ModelNotFoundException $e) {
+                return false;
+            }
+        }
         return false;
     }
 
@@ -91,6 +104,27 @@ class ModifController {
         }
     }
 
+    private function modifyListe() {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        $liste = Liste::where("modifToken", "=", $this->token)->first();
+        $titre = $_POST['titreListe'];
+        $description = $_POST['descriptionListe'];
+        $dateEch = $_POST['dateEcheanceListe'];
+        if ($titre !== "" && $description !== "" && $dateEch !== "") {
+            $liste->titre = filter_var($titre, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->description = filter_var($description, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->expiration = filter_var($dateEch, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->save();
+            $url = $req->getRootUri() . "/liste/$liste->no";
+            $slim->redirect($url, 302);
+        } else {
+            setCookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
+            $slim->redirect($req->getRootUri() . $req->getResourceUri(), 302);
+        }
+
+    }
+
     private function modifyItem() {
         $slim = Slim::getInstance();
         $req = $slim->request;
@@ -117,27 +151,6 @@ class ModifController {
         }
     }
 
-    private function modifyListe() {
-        $slim = Slim::getInstance();
-        $req = $slim->request;
-        $liste = Liste::where("modifToken", "=", $this->token)->first();
-        $titre = $_POST['titreListe'];
-        $description = $_POST['descriptionListe'];
-        $dateEch = $_POST['dateEcheanceListe'];
-        $butValider = $_POST['valider'];
-        if ($titre !== "" && $description !== "" && $dateEch !== "" && $butValider === 'submit') {
-            $liste->titre = filter_var($titre, FILTER_SANITIZE_SPECIAL_CHARS);
-            $liste->description = filter_var($description, FILTER_SANITIZE_SPECIAL_CHARS);
-            $liste->expiration = filter_var($dateEch, FILTER_SANITIZE_SPECIAL_CHARS);
-            $liste->save();
-            $url = $req->getRootUri() . "/liste/$liste->id";
-            $slim->redirect($url, 302);
-        } else {
-            setCookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
-            $slim->redirect($req->getResourceUri(), 302);
-        }
-
-    }
     public function delete() {
         $slim = Slim::getInstance();
         $req = $slim->request;
