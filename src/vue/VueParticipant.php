@@ -2,6 +2,7 @@
 
 namespace mywishlist\vue;
 
+use mywishlist\model\Commentaire;
 use Slim\Slim;
 
 class VueParticipant extends Vue {
@@ -62,12 +63,12 @@ END;
     private function renderList() {
         $tableau = $this->tableau;
         $items = $tableau->Item;
-        $text = "<div><h4>$tableau->titre</h4>
-      <div class=\"mb-4 \"> ";
+        $text = "<div><h4>$tableau->titre</h4><div class=\"mb-4 \"> ";
         foreach ($items as $item) {
             $text .= $this->renderItemListe($item);
         }
         $text .= "</div> <h4>$tableau->description</h4> </div>";
+        $text .=$this->renderAjoutMessageListe();
         return $text;
     }
 
@@ -259,6 +260,31 @@ $err
 END;
 
     }
+
+
+    public function renderAjoutMessageListe(){
+        return <<<END
+       <form class="form-horizontal" method="post">
+
+
+<!-- Form Name -->
+<legend>Message Liste</legend>
+
+<!-- Text input-->
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="message">Ajoutez un message à la liste</label>  
+  <div class="col-md-4">
+  <input id="message" name="message" type="text" placeholder="Votre message" class="form-control input-md">
+  <span class="help-block">Ajouter votre nom au message</span>  
+  </div>
+</div>
+
+
+</form>
+END;
+    }
+
 
 
 }

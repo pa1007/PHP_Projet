@@ -4,6 +4,7 @@
 namespace mywishlist\controller;
 
 
+use mywishlist\model\Commentaire;
 use mywishlist\model\Liste;
 use mywishlist\vue\VueParticipant;
 use Slim\Slim;
@@ -53,6 +54,18 @@ class ListController {
         }
 
 
+    }
+
+
+
+    public function MessageAjoute($id){
+        $com = new Commentaire();
+        $com->message= filter_var($_POST['message'],FILTER_SANITIZE_STRING);
+        $com->liste_id = $id;
+        $com->save();
+        $lis = Liste::where('no', '=', $id)->first();
+        $v=new VueParticipant($lis);
+        $v->render(VueParticipant::LISTE);
     }
 
 }
