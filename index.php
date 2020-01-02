@@ -2,6 +2,7 @@
 
 
 use Illuminate\Database\Capsule\Manager as DB;
+use mywishlist\controller\CompteController;
 use mywishlist\controller\ItemController;
 use mywishlist\controller\ListController;
 use mywishlist\controller\ModifController;
@@ -38,7 +39,7 @@ $app->post('/createitem', function () {
     $itemContr->postCreaForm();
 });
 
-$app->get('/createListe',function(){
+$app->get('/createliste', function () {
     $list = new ListController();
     $list->seeFormCrea();
 })->setName('creaListe');
@@ -46,14 +47,12 @@ $app->get('/createListe',function(){
 $app->post('/createliste', function () {
     $list = new ListController();
     $list->postCreaForm();
-    $list->creerListe();
 });
 
 
-$app->post('/liste/:id',function($id){
-    $list=new ListController();
+$app->post('/liste/:id', function ($id) {
+    $list = new ListController();
     $list->MessageAjoute($id);
-
 });
 
 $app->get("/createcompte", function () {
@@ -72,9 +71,50 @@ $app->get("/modif/:type/:token", function ($type, $token) {
 });
 $app->post("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
-    $modifController->modifyItem();
+    $modifController->modify();
+});
+$app->delete("/modif/:type/:token", function ($type, $token) {
+    $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
+    $modifController->delete();
 });
 
+$app->post("/item/:id", function ($id) {
+    $reserv = new ItemController();
+    $reserv->reserverItem($id);
+});
+
+$app->get('/connect', function () {
+    $cCont = new CompteController();
+    $cCont->formConn();
+})->setName('connect');
+
+$app->post('/connect', function () {
+    $cCont = new CompteController();
+    $cCont->auth();
+});
+
+$app->get('/connected/', function () {
+    $cCont = new CompteController();
+    $cCont->connected();
+})->setName('compteco');
+
+$app->post("/connected/addModif", function () {
+    $cCont = new CompteController();
+    $cCont->addToken();
+});
+$app->get('/logout', function () {
+    $cCont = new CompteController();
+    $cCont->logout();
+});
+
+$app->post("/connected/modifCompte", function () {
+    $cCont = new CompteController();
+    $cCont->modifCompte();
+});
+$app->delete("/connected/modifCompte", function () {
+    $cCont = new CompteController();
+    $cCont->deleteCompte();
+});
 
 $app->get('/', function () {
     $vueIndex = new VueIndex();
