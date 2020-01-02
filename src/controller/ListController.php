@@ -32,7 +32,6 @@ class ListController {
 
     public function postCreaForm() {
         $slim = Slim::getInstance();
-        $it = 0;
         if (isset($_POST['titre']) && $_POST["titre"] !== "" && isset($_POST["Description"]) && $_POST["Description"] !== "" && isset($_POST["date"])
             && $_POST["date"] !== "" && isset($_POST['valider'])) {
             $list = new Liste();
@@ -57,14 +56,14 @@ class ListController {
     }
 
 
-
-    public function MessageAjoute($id){
+    public function MessageAjoute($id) {
         $com = new Commentaire();
-        $com->message= filter_var($_POST['message'],FILTER_SANITIZE_STRING);
+        $com->message = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
+        $com->nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
         $com->liste_id = $id;
         $com->save();
         $lis = Liste::where('no', '=', $id)->first();
-        $v=new VueParticipant($lis);
+        $v = new VueParticipant($lis);
         $v->render(VueParticipant::LISTE);
     }
 

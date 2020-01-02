@@ -2,7 +2,7 @@
 
 namespace mywishlist\vue;
 
-use mywishlist\model\Commentaire;
+use mywishlist\model\User;
 use Slim\Slim;
 
 class VueParticipant extends Vue {
@@ -68,7 +68,8 @@ END;
             $text .= $this->renderItemListe($item);
         }
         $text .= "</div> <h4>$tableau->description</h4> </div>";
-        $text .=$this->renderAjoutMessageListe();
+        $text .= $this->renderMessages();
+        $text .= $this->renderAjoutMessageListe();
         return $text;
     }
 
@@ -92,6 +93,38 @@ END;
           </div>
           </div>
    
+END;
+    }
+
+    private function renderMessages() {
+        $u = $this->tableau->comm;
+        $comms = "";
+        foreach ($u as $item) {
+            $comms .= "";
+        }
+        return $comms;
+    }
+
+    private function renderAjoutMessageListe() {
+        $poN = "";
+        if (isset($_SESSION['id'])) {
+            $var = User::find($_SESSION['id']['uid']);
+            $poN = $var->prenom . " " . $var->nom;
+        }
+        return <<<END
+       <form class="form-horizontal" method="post">
+<legend>Message Liste</legend>
+ <div class="form-row">
+<div class="form-group col-md-6">
+  <label class=control-label" for="message">Ajoutez un message à la liste</label>  
+  <input id="message" name="message" type="text" placeholder="Votre message" class="form-control input-md">
+</div>
+      <div class="form-group col-md-6">
+      <label for="nom">Nom</label>
+      <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom" required value="$poN">
+    </div></div>
+    <input type="submit" class="form-control btn btn-info">
+</form>
 END;
     }
 
@@ -258,33 +291,7 @@ $err
 
 
 END;
-
     }
-
-
-    public function renderAjoutMessageListe(){
-        return <<<END
-       <form class="form-horizontal" method="post">
-
-
-<!-- Form Name -->
-<legend>Message Liste</legend>
-
-<!-- Text input-->
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="message">Ajoutez un message à la liste</label>  
-  <div class="col-md-4">
-  <input id="message" name="message" type="text" placeholder="Votre message" class="form-control input-md">
-  <span class="help-block">Ajouter votre nom au message</span>  
-  </div>
-</div>
-
-
-</form>
-END;
-    }
-
 
 
 }

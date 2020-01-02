@@ -15,6 +15,8 @@ class Liste extends Model {
         return $this->hasMany('mywishlist\model\Item', 'liste_id');
     }
 
-
+    public function comm() {
+        return $this->hasMany("mywishlist\model\Commentaire", 'liste_id');
+    }
 
 }

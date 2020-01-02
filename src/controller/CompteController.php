@@ -43,6 +43,7 @@ class CompteController {
             if ($pass === $passC) {
                 try {
                     Authentication::createUser($log, $pass, $nom, $prenom, $email);
+                    $slim->redirect($slim->urlFor("compteco"), 301);
                 } catch (AuthException $e) {
                     setcookie("Error", $e->getMessage(), time() + 10);
                     $slim->redirect($slim->urlFor("createcompte"), 302);
@@ -98,10 +99,11 @@ class CompteController {
             $page = isset($_GET['page']) ? $_GET['page'] : "";
             switch ($page) {
                 case "listes" :
-                    $vueCompte->addListe($this->genreateListes());
+                    $vueCompte->listes = $this->genreateListes();
                     $vueCompte->render(VueCompte::AUFSEELISTES);
                     break;
                 case "modif":
+                    $vueCompte->user = User::find($_SESSION['id']['uid']);
                     $vueCompte->render(VueCompte::AUFMODIFCOMPTE);
                     break;
                 default:
@@ -144,12 +146,6 @@ class CompteController {
         return "ERROR";
     }
 
-    public function logout() {
-        unset($_SESSION['id']);
-        $slim = Slim::getInstance();
-        $slim->redirect($slim->urlFor('Menu'));
-    }
-
     public function addToken() {
         $slim = Slim::getInstance();
         if ($this->isConnected()) {
@@ -172,5 +168,77 @@ class CompteController {
             $slim->redirect($slim->urlFor("Error"), 301);
         }
         $slim->redirect($slim->request->getRootUri() . "/connected?page=listes", 302);
+    }
+
+    function modifCompte() {
+        $slim = Slim::getInstance();
+        $url = $slim->request->getRootUri();
+        if ($this->isConnected()) {
+            $nom = filter_var($_POST['name'], FILTER_SANITIZE_SPECIAL_CHARS);
+            $prenom = filter_var($_POST['prenom'], FILTER_SANITIZE_SPECIAL_CHARS);
+            $pass = filter_var($_POST['password'], FILTER_SANITIZE_SPECIAL_CHARS);
+            $passC = filter_var($_POST['passwordConf'], FILTER_SANITIZE_SPECIAL_CHARS);
+            $email = $_POST['mail'];
+            try {
+                $logout = false;
+                $u = User::where("uid", '=', $_SESSION['id']['uid'])->firstOrFail();
+                $u->nom = $nom;
+                $u->prenom = $prenom;
+                $u->mail = $email;
+                if ($pass !== "" && !password_verify($pass, $u->password)) {
+                    if ($pass === $passC) {
+                        $u->password = password_hash($pass, PASSWORD_DEFAULT);
+                        $logout = true;
+                    } else {
+                        setcookie("Error", "Les mots de passe ne correspondent pas", time() + 10);
+                        $slim->redirect($url . "/connected/?page=modif");
+                    }
+                }
+                $u->save();
+                if ($logout) {
+                    $this->logout();
+                }
+            } catch (ModelNotFoundException $e) {
+                $slim->redirect($slim->urlFor("Error"), 301);
+            }
+
+        } else {
+            $slim->redirect($slim->urlFor("Error"), 301);
+        }
+        $slim->redirect($url . "/connected");
+    }
+
+    public function logout() {
+        unset($_SESSION['id']);
+        $slim = Slim::getInstance();
+        $slim->redirect($slim->urlFor('Menu'));
+    }
+
+
+    public function deleteCompte() {
+        $slim = Slim::getInstance();
+        $url = $slim->request->getRootUri();
+        if ($this->isConnected()) {
+            $uid = $_SESSION['id']['uid'];
+            $listesUser = Liste::where('user_id', '=', $uid)->get();
+            foreach ($listesUser as $liste) {
+                foreach ($liste->Item as $item) {
+                    $img1 = $item->img;
+                    if (!filter_var($img1, FILTER_VALIDATE_URL)) {
+                        $img = $url . 'img/' . $img1;
+                        if (file_exists($img)) {
+                            unset($img);
+                        }
+                    }
+                    $item->delete();
+                }
+                $liste->delete();
+            }
+            User::find($uid)->delete();
+            $this->logout();
+
+        } else {
+            $slim->redirect($slim->urlFor("Error"), 301);
+        }
     }
 }

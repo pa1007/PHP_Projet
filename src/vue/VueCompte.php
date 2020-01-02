@@ -13,6 +13,7 @@ class   VueCompte extends Vue {
     const NORMAL = 30;
     private $message;
     private $listes;
+    private $user;
 
     public function __construct($message = "") { $this->message = $message; }
 
@@ -131,6 +132,8 @@ END;
         $request = $slim->request;
         $url = $request->getPath();
         $urlLogout = $request->getRootUri() . "/logout";
+        $u = $this->user;
+        $urlmodifCompte = $url . "modifCompte";
         return <<<END
 <div class="row">
   <div class="col-3">
@@ -144,7 +147,42 @@ END;
   <div class="col-9">
     <div class="tab-content" id="v-pills-tabContent">
       <div>
-      
+         <div class="form">
+          <form class="form-check" method="post" action="$urlmodifCompte">
+           <div class="form-row">
+      <div class="form-group col-md-6">
+      <label for="name">Nom</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Nom" required value="$u->nom">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="prenom">Prenom</label>
+      <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prenom" required value="$u->prenom">
+    </div></div>
+  <div class="form-row">
+      <div class="form-group col-md-6">
+      <label for="login">Login</label>
+      <input class="form-control disabled" disabled placeholder="login" required value="$u->login">
+    </div>
+     <div class="form-group col-md-6">
+      <label for="mail">Mail</label>
+      <input type="email" class="form-control" id="mail" name="mail" placeholder="Email"  value="$u->mail" required>
+    </div> </div>
+  <div class="form-row">
+   <div class="form-group col-md-6">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="passwordConf">Confirmation</label>
+      <input type="password" class="form-control" id="passwordConf" name="passwordConf" placeholder="Password">
+    </div> </div>
+    <button type="submit" class="btn btn-primary">Validez</button>
+          </form>
+          <form action="$urlmodifCompte" method="post">
+          <input type="hidden" name="_METHOD" value="DELETE" hidden/> <!--https://docs.slimframework.com/routing/delete/ -->
+          <div class="col-md-6"><input type="submit" class="btn btn-danger" value="Supprimez Compte"></div>
+          </form>
+        </div>
 </div>
     </div>
   </div>
@@ -216,8 +254,10 @@ END;
 
     }
 
-    public function addListe($listes) {
-        $this->listes = $listes;
+    public function __set($property, $value) {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
     }
 
 }
