@@ -100,7 +100,9 @@ END;
         $u = $this->tableau->comm;
         $comms = "";
         foreach ($u as $item) {
-            $comms .= "";
+            $comms .= "<div class=\"alert alert-dark \" role=\"alert\">
+  $item->nom : <div class='d-inline'> $item->message</div>
+</div>";
         }
         return $comms;
     }
@@ -113,7 +115,6 @@ END;
         }
         return <<<END
        <form class="form-horizontal" method="post">
-<legend>Message Liste</legend>
  <div class="form-row">
 <div class="form-group col-md-6">
   <label class=control-label" for="message">Ajoutez un message à la liste</label>  
