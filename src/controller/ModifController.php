@@ -5,6 +5,7 @@ namespace mywishlist\controller;
 
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use mywishlist\model\Images;
 use mywishlist\model\Item;
 use mywishlist\model\Liste;
 use mywishlist\model\User;
@@ -182,5 +183,58 @@ class ModifController {
             $slim->redirect($slim->urlFor('Error'), 301);
         }
 
+    }
+
+    public function changeImageForm() {
+        $slim = Slim::getInstance();
+        if ($this->testToken()) {
+            $vueModif = new VueModif($this->token);
+            $vueModif->render(VueModif::ITEM_IMAGE_CHANGE);
+        } else {
+            $slim->redirect($slim->urlFor('Error'), 301);
+        }
+    }
+
+    public function modifyImage() {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        if ($this->testToken()) {
+            $u = Item::where('modifToken', '=', $this->token)->first();
+            $im = new Images();
+
+            $im->id_item = $u->id;
+
+            $submit = $_POST['submit'];
+            if ($submit === "file") {
+
+            } elseif ($submit === "image") {
+                $urlImageP = $_POST['url'];
+                $im->img = filter_var($urlImageP, FILTER_SANITIZE_URL);
+            } else {
+                $slim->redirect($slim->urlFor('Error'), 301);
+            }
+            $im->save();
+            $slim->redirect($req->getRootUri() . "/modif/item/$this->token/changeImage");
+        } else {
+            $slim->redirect($slim->urlFor('Error'), 301);
+        }
+    }
+
+    public function deleleImage($id) {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        if ($this->testToken()) {
+            $item = Item::where("modifToken", "=", $this->token)->first();
+            foreach ($item->images as $image) {
+                if ($image->id_image == $id) {
+                    if (!filter_var($image->img, FILTER_VALIDATE_URL)) {
+                        unlink("img/$image->img");
+                    }
+                    $image->delete();
+                    $slim->redirect($req->getRootUri() . "/modif/item/$this->token/changeImage");
+                }
+            }
+        }
+        $slim->redirect($slim->urlFor('Error'), 301);
     }
 }

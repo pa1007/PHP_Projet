@@ -13,8 +13,12 @@ class Item extends Model {
         return $this->belongsTo('mywishlist\model\Liste', 'liste_id');
     }
 
-    public function Reservation(){
+    public function Reservation() {
         return $this->belongsTo('mywishlist\model\Reservation', 'id');
+    }
+
+    public function images() {
+        return $this->hasMany("mywishlist\model\Images", "id_item");
     }
 
 }

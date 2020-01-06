@@ -12,6 +12,7 @@ class VueModif extends Vue {
 
     const LISTE = 1;
     const ITEM = 2;
+    const ITEM_IMAGE_CHANGE = 3;
 
     private $token;
 
@@ -43,6 +44,9 @@ END;
             case self::LISTE:
                 $cont .= $this->renderListe();
                 break;
+            case self::ITEM_IMAGE_CHANGE:
+                $cont .= $this->renderItemChangeImage();
+                break;
             default :
                 $slim = Slim::getInstance();
                 $slim->redirect($slim->urlFor("Error"), 301);
@@ -61,6 +65,9 @@ END;
 
     private function renderItem() {
         $u = Item::where('modifToken', "=", $this->token)->first();
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getPath();
         $sel = $this->generateSel($u->liste_id);
         return <<<END
 <form class="form-horizontal" method="post">
@@ -75,7 +82,7 @@ END;
 <div class="form-group">
   <label class="col-md-4 control-label" for="Image">Image</label>  
   <div class="col-md-4">
-  <input id="Image" name="Image" type="text" placeholder="Image" class="form-control input-md" value="$u->img">
+ <a class="btn btn-block btn-info" href="$url/changeImage">Modification Images</a>
   </div>
 </div>
 <div class="form-group">
@@ -188,5 +195,74 @@ END;
 
 END;
 
+    }
+
+    private function renderItemChangeImage() {
+        $u = Item::where('modifToken', "=", $this->token)->first();
+        $more = "";
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getPath();
+        $images = $u->images;
+        if (!$images->isEmpty()) {
+            $more .= "<span class='d-block small alert-info text-center '> Cliquez sur l'image pour la supprimer</span>";
+            $more .= "<label>Images associées : </label>";
+            foreach ($images as $image) {
+                $imageL = $this->getImage($image->img, $request);
+                $more .= <<<END
+<div class='d-inline'>
+<form action="$url/sup/$image->id_image" method="post" class="d-inline">
+   <input type="hidden" name="_METHOD" value="DELETE" hidden/> <!--https://docs.slimframework.com/routing/delete/ -->
+        <button type="submit" class="btn btn-danger d-inline"><img src="$imageL" width="100" height="100" alt="image$image->id_image" class="d-inline"/></input>
+      </form>  
+</div>
+END;
+            }
+
+        }
+        return <<<END
+<form method="post" enctype="multipart/form-data">
+<legend>Ajoutez une image</legend>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Ajout image">Choisissez un fichier</label>
+  <div class="col-md-4">
+    <input id="Ajout image" name="image" class="input-file" type="file">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="valider" name="submit" value="file" class="btn btn-primary">Valider</button>
+  </div>
+</div>
+</form>
+<form  method="post" enctype="multipart/form-data">
+<div class="form-group">
+  <label class="col-md-4 control-label" for="url">URL Externe d'explication</label>  
+  <div class="col-md-4">
+  <input id="urlExter" name="url" type="url" placeholder="URL" class="form-control input-md">
+  </div>
+</div>
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="valider" name="submit" value="image" class="btn btn-primary">Valider</button>
+  </div>
+</div>
+</fieldset>
+</form>
+<div class="d-inline">
+   $more 
+</div>
+END;
+
+    }
+
+    private function getImage($img, $req) {
+        if (!filter_var($img, FILTER_VALIDATE_URL)) {
+            $img = $req->getRootUri() . "/img/$img";
+        }
+        return $img;
     }
 }

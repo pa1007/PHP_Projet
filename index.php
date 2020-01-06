@@ -69,6 +69,18 @@ $app->get("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->process();
 });
+$app->get("/modif/item/:token/changeImage", function ($token) {
+    $modifController = new ModifController("item", filter_var($token, FILTER_SANITIZE_STRING));
+    $modifController->changeImageForm();
+});
+$app->post("/modif/item/:token/changeImage", function ($token) {
+    $modifController = new ModifController("item", filter_var($token, FILTER_SANITIZE_STRING));
+    $modifController->modifyImage();
+});
+$app->delete("/modif/item/:token/changeImage/sup/:id", function ($token, $id) {
+    $modifController = new ModifController("item", filter_var($token, FILTER_SANITIZE_STRING));
+    $modifController->deleleImage($id);
+});
 $app->post("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->modify();
@@ -76,6 +88,11 @@ $app->post("/modif/:type/:token", function ($type, $token) {
 $app->delete("/modif/:type/:token", function ($type, $token) {
     $modifController = new ModifController($type, filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->delete();
+});
+
+$app->post("/item/:id", function ($id) {
+    $img = new ItemController();
+    $img->ajoutImage($id);
 });
 
 $app->post("/item/:id", function ($id) {

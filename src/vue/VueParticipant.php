@@ -77,12 +77,17 @@ END;
         $slim = Slim::getInstance();
         $req = $slim->request;
         $rootUri = $req->getRootUri() . "/item/$item->id";
+        if (filter_var($item->img, FILTER_VALIDATE_URL)) {
+            $img = $item->img;
+        } else {
+            $img = "../img/$item->img";
+        }
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">
             <div class="my-0 font-weight-normal"><h1 class="card-title ">$item->nom</h1></div>
           </div>
-          <div class="card-body d-inline-flex"><img class="border border-primary " src='../img/$item->img' height="250" width="250" style="" alt="">
+          <div class="card-body d-inline-flex"><img class="border border-primary " src='$img' height="250" width="250" style="" alt="">
             <div class="m-5">
             <br><br>
                 <h3>$item->descr</h3>
@@ -134,6 +139,11 @@ END;
         $lis = $item->Liste;
         $reserv = $item->Reservation;
         $all = "";
+        if (filter_var($item->img, FILTER_VALIDATE_URL)) {
+            $img = $item->img;
+        } else {
+            $img = "../img/$item->img";
+        }
         if (!is_null($lis)) {
             $slim = Slim::getInstance();
             $req = $slim->request;
@@ -169,7 +179,7 @@ END;
           <div class="card-header">
             <div class="my-0 font-weight-normal"><h1 class="card-title ">$item->nom</h1></div>
           </div>
-          <div class="card-body d-inline-flex"><img class="border border-primary " src='../img/$item->img' height="250" width="250" style="" alt="">
+          <div class="card-body d-inline-flex"><img class="border border-primary " src='$img' height="250" width="250" style="" alt="">
             <div class="m-5">
             <br><br>
                 <h3>$item->descr</h3>
@@ -292,6 +302,44 @@ $err
 
 
 END;
+    }
+
+
+    public function renderAjouterImageItem(){
+        return <<<END
+<form class="form-horizontal">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Ajoutez une image</legend>
+
+<!-- File Button --> 
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Ajout image">Choisissez un fichier</label>
+  <div class="col-md-4">
+    <input id="Ajout image" name="image" class="input-file" type="file">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label" for="urlExter">URL Externe d'explication</label>  
+  <div class="col-md-4">
+  <input id="urlExter" name="urlExter" type="url" placeholder="URL" class="form-control input-md">
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="valider"></label>
+  <div class="col-md-4">
+    <button id="valider" name="valider" class="btn btn-primary">Valider</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+END;
+
     }
 
 
