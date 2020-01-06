@@ -77,17 +77,13 @@ END;
         $slim = Slim::getInstance();
         $req = $slim->request;
         $rootUri = $req->getRootUri() . "/item/$item->id";
-        if (filter_var($item->img, FILTER_VALIDATE_URL)) {
-            $img = $item->img;
-        } else {
-            $img = "../img/$item->img";
-        }
+        $img = $this->generateImageView($item->images);
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">
             <div class="my-0 font-weight-normal"><h1 class="card-title ">$item->nom</h1></div>
           </div>
-          <div class="card-body d-inline-flex"><img class="border border-primary " src='$img' height="250" width="250" style="" alt="">
+          <div class="card-body d-inline-flex">$img
             <div class="m-5">
             <br><br>
                 <h3>$item->descr</h3>
@@ -99,6 +95,36 @@ END;
           </div>
    
 END;
+    }
+
+    private function generateImageView($images) {
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getRootUri();
+        $more = "";
+        $i = 1;
+        foreach ($images as $image) {
+            if (filter_var($image->img, FILTER_VALIDATE_URL)) {
+                $img = $image->img;
+            } else {
+                $img = $url . "/img/$image->img";
+            }
+            if ($i === 1) {
+                $more .= "    <div class=\"carousel-item active\">";
+            } else {
+                $more .= "    <div class=\"carousel-item\">";
+            }
+            $more .= "<img class=\"d-block w-100\" src=\"$img\" alt=\"\" width='150px' height='250px'></div>\n";
+            $i++;
+        }
+        return <<<END
+<div id="carouselImg" class="carousel slide w-25" data-ride="carousel">
+  <div class="carousel-inner">
+    $more
+  </div>
+</div>
+END;
+
     }
 
     private function renderMessages() {
@@ -199,36 +225,6 @@ END;
           </div>
    
 END;
-    }
-
-    private function generateImageView($images) {
-        $slim = Slim::getInstance();
-        $request = $slim->request;
-        $url = $request->getRootUri();
-        $more = "";
-        $i = 1;
-        foreach ($images as $image) {
-            if (filter_var($image->img, FILTER_VALIDATE_URL)) {
-                $img = $image->img;
-            } else {
-                $img = $url . "/img/$image->img";
-            }
-            if ($i === 1) {
-                $more .= "    <div class=\"carousel-item active\">";
-            } else {
-                $more .= "    <div class=\"carousel-item\">";
-            }
-            $more .= "<img class=\"d-block w-100\" src=\"$img\" alt=\"\" width='150px' height='250px'></div>\n";
-            $i++;
-        }
-        return <<<END
-<div id="carouselImg" class="carousel slide w-25" data-ride="carousel">
-  <div class="carousel-inner">
-    $more
-  </div>
-</div>
-END;
-
     }
 
     private function renderCreatItem() {
