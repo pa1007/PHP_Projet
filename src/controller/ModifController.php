@@ -206,7 +206,14 @@ class ModifController {
 
             $submit = $_POST['submit'];
             if ($submit === "file") {
-
+                $target_dir = "img/";
+                $basename = basename($_FILES["image"]["name"]);
+                $target_file = $target_dir . $basename;
+                if (!file_exists($target_file)) {
+                    move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+                }
+                $im->img = $basename;
+                unset($_FILES['image']);
             } elseif ($submit === "image") {
                 $urlImageP = $_POST['url'];
                 $im->img = filter_var($urlImageP, FILTER_SANITIZE_URL);
