@@ -69,4 +69,8 @@ class ListController {
         $slim->redirect($url, 302);
     }
 
+    public function PartagerListe($id) {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+    }
 }

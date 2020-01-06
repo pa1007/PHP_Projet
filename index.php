@@ -138,6 +138,11 @@ $app->get('/', function () {
     $vueIndex->render(1);
 })->setName("Menu");
 
+$app->post('/participe/:token', function ($id) {
+    $listCont = new ListController();
+    $listCont->PartagerListe($id);
+});
+
 $db = new DB();
 $db->addConnection(parse_ini_file("src/conf/conf.ini"));
 $db->setAsGlobal();
