@@ -162,13 +162,20 @@ END;
             <form class="" method="POST">
               <fieldset>
                 <legend>Reservation</legend>
-                  <div class="form-group">
+                  <div class="form-row">
+                  <div class="form-group col-md-8">
                     <label class="control-label" for="nomUtilisateur">Utilisateur</label>  
                       <div class="">
                       <input name="nomUtilisateur" class="form-control input-md" id="nomUtilisateur" type="text" placeholder="nom" value="$name">
                       </div>
                   </div>
-
+                <div class="form-group col-md-8">
+            <label class=" control-label" for="message">Message</label>
+            <div class="">                     
+             <textarea name="message" class="form-control" id="message">texte</textarea>
+             </div>
+            </div>
+</div>
               </fieldset>
             </form>
 END;
