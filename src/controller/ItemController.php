@@ -27,6 +27,7 @@ class ItemController {
                 $r = new Reservation();
                 $r->idItem = $id;
                 $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'], FILTER_SANITIZE_SPECIAL_CHARS);
+                $r->message = filter_var($_POST['message'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $r->save();
             }
         }
