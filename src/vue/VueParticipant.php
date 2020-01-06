@@ -139,11 +139,7 @@ END;
         $lis = $item->Liste;
         $reserv = $item->Reservation;
         $all = "";
-        if (filter_var($item->img, FILTER_VALIDATE_URL)) {
-            $img = $item->img;
-        } else {
-            $img = "../img/$item->img";
-        }
+        $img = $this->generateImageView($item->images);
         if (!is_null($lis)) {
             $slim = Slim::getInstance();
             $req = $slim->request;
@@ -158,23 +154,21 @@ END;
             <p>Item reservé</p>
 END;
         if (is_null($reserv)) {
+            $name = "";
+            if (isset($_SESSION['id'])) {
+                $name = $_SESSION['id']['login'];
+            }
             $form = <<<END
-            <form class="form-horizontal" method="POST">
+            <form class="" method="POST">
               <fieldset>
                 <legend>Reservation</legend>
                   <div class="form-group">
-                    <label class="col-md-4 control-label" for="nomUtilisateur">Utilisateur</label>  
-                      <div class="col-md-4">
-                      <input name="nomUtilisateur" class="form-control input-md" id="nomUtilisateur" type="text" placeholder="nom">
-    
+                    <label class="control-label" for="nomUtilisateur">Utilisateur</label>  
+                      <div class="">
+                      <input name="nomUtilisateur" class="form-control input-md" id="nomUtilisateur" type="text" placeholder="nom" value="$name">
                       </div>
                   </div>
-<div class="form-group">
-  <label class="col-md-4 control-label" for="message">Message</label>
-  <div class="col-md-4">                     
-    <textarea name="message" class="form-control" id="message">texte</textarea>
-  </div>
-</div>
+
               </fieldset>
             </form>
 END;
@@ -184,7 +178,7 @@ END;
           <div class="card-header">
             <div class="my-0 font-weight-normal"><h1 class="card-title ">$item->nom</h1></div>
           </div>
-          <div class="card-body d-inline-flex"><img class="border border-primary " src='$img' height="250" width="250" style="" alt="">
+          <div class="card-body d-inline-flex">$img
             <div class="m-5">
             <br><br>
                 <h3>$item->descr</h3>
@@ -198,6 +192,36 @@ END;
           </div>
    
 END;
+    }
+
+    private function generateImageView($images) {
+        $slim = Slim::getInstance();
+        $request = $slim->request;
+        $url = $request->getRootUri();
+        $more = "";
+        $i = 1;
+        foreach ($images as $image) {
+            if (filter_var($image->img, FILTER_VALIDATE_URL)) {
+                $img = $image->img;
+            } else {
+                $img = $url . "/img/$image->img";
+            }
+            if ($i === 1) {
+                $more .= "    <div class=\"carousel-item active\">";
+            } else {
+                $more .= "    <div class=\"carousel-item\">";
+            }
+            $more .= "<img class=\"d-block w-100\" src=\"$img\" alt=\"\" width='150px' height='250px'></div>\n";
+            $i++;
+        }
+        return <<<END
+<div id="carouselImg" class="carousel slide w-25" data-ride="carousel">
+  <div class="carousel-inner">
+    $more
+  </div>
+</div>
+END;
+
     }
 
     private function renderCreatItem() {
@@ -308,45 +332,6 @@ $err
 
 END;
     }
-
-
-    public function renderAjouterImageItem(){
-        return <<<END
-<form class="form-horizontal">
-<fieldset>
-
-<!-- Form Name -->
-<legend>Ajoutez une image</legend>
-
-<!-- File Button --> 
-<div class="form-group">
-  <label class="col-md-4 control-label" for="Ajout image">Choisissez un fichier</label>
-  <div class="col-md-4">
-    <input id="Ajout image" name="image" class="input-file" type="file">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-md-4 control-label" for="urlExter">URL Externe d'explication</label>  
-  <div class="col-md-4">
-  <input id="urlExter" name="urlExter" type="url" placeholder="URL" class="form-control input-md">
-  </div>
-</div>
-
-<!-- Button -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="valider"></label>
-  <div class="col-md-4">
-    <button id="valider" name="valider" class="btn btn-primary">Valider</button>
-  </div>
-</div>
-
-</fieldset>
-</form>
-END;
-
-    }
-
 
 }
 
