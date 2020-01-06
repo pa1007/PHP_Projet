@@ -2,6 +2,7 @@
 
 namespace mywishlist\model;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
 class Liste extends Model {
@@ -19,4 +20,11 @@ class Liste extends Model {
         return $this->hasMany("mywishlist\model\Commentaire", 'liste_id');
     }
 
+    public function hasExpire(): bool {
+        try {
+            return new DateTime() > new DateTime($this->expiration);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

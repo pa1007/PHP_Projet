@@ -26,15 +26,15 @@ abstract class Vue {
     protected final function renduMenu() {
 
         $url = $this->generateLink();
-        $slim =Slim::getInstance();
-        $request =$slim->request;
+        $slim = Slim::getInstance();
+        $request = $slim->request;
         $u = $request->getRootUri();
         return " <div class=\"d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow\">
-      <h5><a class=\"my-0 mr-md-auto font-weight-normal\" href=\"$u/\">My Wish List</a></h5>
+      <h5><a class=\"my-0 mr-md-auto font-weight-normal text-dark text-decoration-none\" href=\"$u/\">My Wish List</h5>
       <nav class=\"my-2 my-md-0 mr-md-3\">
         <a class=\"p-2 text-dark\" href=\"$u/createliste\">Créer une liste</a>
         <a class=\"p-2 text-dark\" href=\"$u/createitem\">Créer un item</a>
-        <a class=\"p-2 text-dark\" href=\"#\">Page 3</a>
+        <a class=\"p-2 text-dark\" href=\"$u/publique\">Liste publique</a>
         <a class=\"p-2 text-dark\" href=\"#\">Page 4</a>
       </nav>
       $url

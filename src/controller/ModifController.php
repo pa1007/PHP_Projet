@@ -112,10 +112,17 @@ class ModifController {
         $titre = $_POST['titreListe'];
         $description = $_POST['descriptionListe'];
         $dateEch = $_POST['dateEcheanceListe'];
+        $visCh = $_POST['Visibilite'];
+        if ($visCh === "2") {
+            $vis = 1;
+        } else {
+            $vis = 0;
+        }
         if ($titre !== "" && $description !== "" && $dateEch !== "") {
             $liste->titre = filter_var($titre, FILTER_SANITIZE_SPECIAL_CHARS);
             $liste->description = filter_var($description, FILTER_SANITIZE_SPECIAL_CHARS);
             $liste->expiration = filter_var($dateEch, FILTER_SANITIZE_SPECIAL_CHARS);
+            $liste->visible = $vis;
             $liste->save();
             $url = $req->getRootUri() . "/liste/$liste->no";
             $slim->redirect($url, 302);
@@ -187,6 +194,7 @@ class ModifController {
 
     public function changeImageForm() {
         $slim = Slim::getInstance();
+        $req = $slim->request;
         if ($this->testToken()) {
             $vueModif = new VueModif($this->token);
             $vueModif->render(VueModif::ITEM_IMAGE_CHANGE);

@@ -149,6 +149,8 @@ END;
 
     private function renderListe() {
         $u = Liste::where('modifToken', "=", $this->token)->first();
+        $visPriv = !$u->visible ? "checked=\"checked\"" : "";
+        $visPubl = $u->visible ? "checked=\"checked\"" : "";
         return <<<END
 <form class="form-horizontal" method="post">
 <fieldset>
@@ -178,10 +180,25 @@ END;
   <label class="col-md-4 control-label" for="dateEcheanceListe">Date d'échéance</label>  
   <div class="col-md-4">
   <input id="dateEcheanceListe" name="dateEcheanceListe" type="date" placeholder="" class="form-control input-md" value="$u->expiration">
-    
   </div>
 </div>
-
+<div class="form-group">
+  <label class="col-md-4 control-label" for="Visibilite">Visibilité</label>
+  <div class="col-md-4">
+  <div class="radio">
+    <label for="Visibilite-0">
+      <input type="radio" name="Visibilite" id="Visibilite-0" value="1" $visPriv>
+      Privé
+    </label>
+	</div>
+  <div class="radio">
+    <label for="Visibilite-1">
+      <input type="radio" name="Visibilite" id="Visibilite-1" value="2" $visPubl>
+      Publique
+    </label>
+	</div>
+  </div>
+</div>
 <!-- Button -->
 <div class="form-group">
   <label class="col-md-4 control-label" for="butValider"></label>

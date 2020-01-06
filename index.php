@@ -49,6 +49,12 @@ $app->post('/createliste', function () {
     $list->postCreaForm();
 });
 
+$app->get('/publique', function () {
+    $list = new ListController();
+    $list->publicListe();
+});
+
+
 $app->post('/liste/:id', function ($id) {
     $list = new ListController();
     $list->MessageAjoute($id);

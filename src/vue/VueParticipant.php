@@ -11,6 +11,7 @@ class VueParticipant extends Vue {
     const ITEM = 2;
     const ITEM_CREA = 4;
     const LIST_CREA = 5;
+    const PUBLIC = 6;
 
     protected $tableau;
 
@@ -45,6 +46,9 @@ class VueParticipant extends Vue {
                 break;
             case VueParticipant::LIST_CREA :
                 $content = $this->renderCreateList();
+                break;
+            case VueParticipant::PUBLIC :
+                $content = $this->publicListes();
                 break;
         }
         $html = <<<END
@@ -332,9 +336,35 @@ $err
 </fieldset>
 </form>
 
-
 END;
     }
 
+
+    private function publicListes() {
+        $slim = Slim::getInstance();
+        $startURL = $slim->request->getRootUri() . "/liste";
+        $ex = "";
+        foreach ($this->tableau as $liste) {
+            $msg = $liste->Item->count();
+            if (!$liste->hasExpire()) {
+                $ex .= <<<END
+<div class="card text-center">
+  <div class="card-header">
+    <h3>$liste->titre</h3>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">$liste->description</h5>
+    <p class="card-text">il y a $msg items</p>
+    <a href="$startURL/$liste->no" class="btn btn-primary">Voir la liste</a>
+  </div>
+  <div class="card-footer text-muted">
+    Expire le $liste->expiration
+  </div>
+</div><br>
+END;
+            }
+        }
+        return $ex;
+    }
 }
 

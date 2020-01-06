@@ -69,6 +69,12 @@ class ListController {
         $slim->redirect($url, 302);
     }
 
+    public function publicListe() {
+        $list = Liste::where('visible', '=', 1)->get();
+        $v = new VueParticipant($list);
+        $v->render(VueParticipant::PUBLIC);
+    }
+
     public function PartagerListe($id) {
         $slim = Slim::getInstance();
         $req = $slim->request;
