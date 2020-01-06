@@ -159,7 +159,12 @@ END;
     
                       </div>
                   </div>
-
+<div class="form-group">
+  <label class="col-md-4 control-label" for="message">Message</label>
+  <div class="col-md-4">                     
+    <textarea name="message" class="form-control" id="message">texte</textarea>
+  </div>
+</div>
               </fieldset>
             </form>
 END;
