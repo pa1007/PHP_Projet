@@ -32,3 +32,42 @@ Il vous suffit d'importer la base de donnée puis d'allumer votre serveur XAMPP
 [FabienDrommer](https://github.com/pa1007/PHP_Projet/commits?author=FabienDrommer) - Fabien Drommer - S3B 
 
 [pa1007](https://github.com/pa1007/PHP_Projet/commits?author=pa1007) - Paul-Alexandre Fourrière - S3B
+
+
+## Tableau de bord
+
+|Nom Fonctionnalité|Personne|Détail suplémentaire|
+| ---------- | :---:  | ------------- | 
+|1 Afficher une liste de souhaits |Fabien Drommer |  |
+|2 Afficher un item d'une liste |Laury Thiebaux||
+|3 Réserver un item |Fabien Drommer ||
+|4 Ajouter un message avec sa réservation |Fabien Drommer||
+|5 Ajouter un message sur une liste |Matthias Froehlicher||
+|6 Créer une liste|Matthias Froehlicher||
+|7 Modifier les informations générales d'une de ses listes |Laury Thiebaux||
+|8 Ajouter des items |Paul-Alexandre Fourrière||
+|9 Modifier un item |Paul-Alexandre Fourrière & Laury Thiebaux||
+|10 Supprimer un item|Paul-Alexandre Fourrière||
+|11 Rajouter une image à un item |Matthias Froehlicher||
+|12 Modifier une image d'un item |Matthias Froehlicher||
+|13 Supprimer une image d'un item |Matthias Froehlicher||
+|14 Partager une liste|Paul-Alexandre Fourrière ||
+|15 Consulter les réservations d'une de ses listes avant échéance|Paul-Alexandre Fourrière & Fabien Drommer||
+|16 Consulter les réservations et messages d'une de ses listes après échéance | PAS ENCORE FAIT||
+|17 Créer un compte|Paul-Alexandre Fourrière||
+|18 S'authentifier|Paul-Alexandre Fourrière||
+|19 Modifier son compte |Paul-Alexandre Fourrière||
+|20 Rendre une liste publique |Paul-Alexandre Fourrière||
+|21 Afficher les listes de souhaits publiques|Paul-Alexandre Fourrière||
+|22 Créer une cagnotte sur un item | PAS ENCORE FAIT||
+|23 Participer à une cagnotte|PAS ENCORE FAIT||
+|24 Uploader une image|Paul-Alexandre Fourrière||
+|25 Créer un compte participant|PAS ENCORE FAIT||
+|26 Afficher la liste des créateurs |PAS ENCORE FAIT||
+|27 Supprimer son compte|Paul-Alexandre Fourrière||
+|28 Joindre des listes à son compte|Paul-Alexandre Fourrière||
+||||
+
+
+## Lien d'exemple :
+[https://webetu.iutnc.univ-lorraine.fr/www/fourrie15u/php/](https://webetu.iutnc.univ-lorraine.fr/www/fourrie15u/php/)
