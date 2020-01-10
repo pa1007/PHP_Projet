@@ -133,7 +133,7 @@ END;
         $url = $request->getPath();
         $urlLogout = $request->getRootUri() . "/logout";
         $u = $this->user;
-        $urlmodifCompte = $url . "modifCompte";
+        $urlmodifCompte = $url . "/modifCompte";
         return <<<END
 <div class="row">
   <div class="col-3">
