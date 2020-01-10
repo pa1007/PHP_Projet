@@ -71,3 +71,9 @@ Il vous suffit d'importer la base de donnée puis d'allumer votre serveur XAMPP
 
 ## Lien d'exemple :
 [https://webetu.iutnc.univ-lorraine.fr/www/fourrie15u/php/](https://webetu.iutnc.univ-lorraine.fr/www/fourrie15u/php/)
+
+Comptes de test : 
+
+|Login|Mot de passe|
+| ---------- | ------------- |   
+|prof|prof123|
