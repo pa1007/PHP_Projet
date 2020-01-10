@@ -152,7 +152,15 @@ class ModifController {
             $item->liste_id = filter_var($listP, FILTER_SANITIZE_NUMBER_INT);
             $item->url = filter_var($_POST['urlEx'], FILTER_SANITIZE_URL);
             $item->save();
-            $url = $req->getRootUri() . "/item/$item->id";
+
+            try {
+                $token = $item->Liste->token;
+            } catch (\Exception $e) {
+                setcookie("Error", "Pour voir un item il lui faut une liste", time() + 10);
+                $url = $req->getRootUri() . "/modif/$this->type/$this->token";
+                $slim->redirect($url, 302);
+            }
+            $url = $req->getRootUri() . "/liste/$token/item/$item->id";
             $slim->redirect($url, 302);
         } else {
             setcookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
