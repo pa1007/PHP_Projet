@@ -4,8 +4,10 @@
 namespace mywishlist\controller;
 
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\model\Commentaire;
 use mywishlist\model\Liste;
+use mywishlist\model\Partage;
 use mywishlist\vue\VueParticipant;
 use Slim\Slim;
 
@@ -15,7 +17,7 @@ class ListController {
     }
 
     public function getList($no) {
-        $list = Liste::where('no', '=', $no)->first();
+        $list = Liste::where('token', '=', $no)->first();
         $v = new VueParticipant($list);
         $v->render(VueParticipant::LISTE);
     }
@@ -39,6 +41,7 @@ class ListController {
             $list->description = filter_var($_POST['Description'], FILTER_SANITIZE_SPECIAL_CHARS);
             $list->expiration = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
             $list->modifToken = bin2hex(openssl_random_pseudo_bytes(32));
+            $list->token = bin2hex(openssl_random_pseudo_bytes(32));
             if (isset($_SESSION['id'])) {
                 $list->user_id = $_SESSION['id']['uid'];
             }
@@ -60,11 +63,11 @@ class ListController {
         $slim = Slim::getInstance();
         $req = $slim->request;
         $com = new Commentaire();
+        $list = Liste::where('token', '=', $id)->first();
         $com->message = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
         $com->nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
-        $com->liste_id = $id;
+        $com->liste_id = $list->no;
         $com->save();
-        $lis = Liste::where('no', '=', $id)->first();
         $url = $req->getRootUri() . "/liste/$id";
         $slim->redirect($url, 302);
     }
@@ -75,8 +78,18 @@ class ListController {
         $v->render(VueParticipant::PUBLIC);
     }
 
-    public function PartagerListe($id) {
+    public function afficherTokenPartage($id) {
         $slim = Slim::getInstance();
         $req = $slim->request;
+        try {
+            $part = Partage::where('tokenpartage', '=', $id)->firstOrFail();
+            $liste = $part->liste;
+            $v = new VueParticipant($liste);
+            $v->render(VueParticipant::LISTE);
+
+
+        } catch (ModelNotFoundException $e) {
+            $slim->redirect($slim->urlFor('Error'));
+        }
     }
 }

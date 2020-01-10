@@ -13,13 +13,18 @@ use Slim\Slim;
 require_once __DIR__ . '/vendor/autoload.php';
 session_start();
 $app = new Slim;
-$app->get('/item/:id', function ($id) {
+$app->get('/liste/:no/item/:id', function ($no, $id) {
     $itemController = new ItemController();
-    $itemController->getItem($id);
+    $itemController->getItem($id, $no);
 });
 $app->get('/liste/:no', function ($no) {
     $listController = new ListController();
     $listController->getList($no);
+});
+
+$app->post('/liste/:id', function ($id) {
+    $list = new ListController();
+    $list->MessageAjoute($id);
 });
 
 $app->get('/error', function () {
@@ -55,11 +60,6 @@ $app->get('/publique', function () {
 });
 
 
-$app->post('/liste/:id', function ($id) {
-    $list = new ListController();
-    $list->MessageAjoute($id);
-});
-
 $app->get("/createcompte", function () {
     $compteController = new CompteController();
     $compteController->compteCrea();
@@ -78,6 +78,10 @@ $app->get("/modif/item/:token/changeImage", function ($token) {
     $modifController = new ModifController("item", filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->changeImageForm();
 });
+$app->post("/modif/liste/:token/partager", function ($token) {
+    $modifController = new ModifController("item", filter_var($token, FILTER_SANITIZE_STRING));
+    $modifController->partagerListe();
+});
 $app->post("/modif/item/:token/changeImage", function ($token) {
     $modifController = new ModifController("item", filter_var($token, FILTER_SANITIZE_STRING));
     $modifController->modifyImage();
@@ -95,14 +99,9 @@ $app->delete("/modif/:type/:token", function ($type, $token) {
     $modifController->delete();
 });
 
-$app->post("/item/:id", function ($id) {
-    $img = new ItemController();
-    $img->ajoutImage($id);
-});
-
-$app->post("/item/:id", function ($id) {
+$app->post("/liste/:token/item/:id", function ($token, $id) {
     $reserv = new ItemController();
-    $reserv->reserverItem($id);
+    $reserv->reserverItem($id, $token);
 });
 
 $app->get('/connect', function () {
@@ -143,9 +142,9 @@ $app->get('/', function () {
     $vueIndex->render(1);
 })->setName("Menu");
 
-$app->post('/participe/:token', function ($id) {
+$app->get('/participe/:token', function ($id) {
     $listCont = new ListController();
-    $listCont->PartagerListe($id);
+    $listCont->afficherTokenPartage(filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS));
 });
 
 $db = new DB();

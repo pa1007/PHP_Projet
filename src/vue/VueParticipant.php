@@ -67,11 +67,11 @@ END;
     private function renderList() {
         $tableau = $this->tableau;
         $items = $tableau->Item;
-        $text = "<div><h4>$tableau->titre</h4><div class=\"mb-4 \"> ";
+        $text = "<h4>$tableau->titre</h4><div> ";
         foreach ($items as $item) {
             $text .= $this->renderItemListe($item);
         }
-        $text .= "</div> <h4>$tableau->description</h4> </div>";
+        $text .= "</div> <h4>$tableau->description</h4>";
         $text .= $this->renderMessages();
         $text .= $this->renderAjoutMessageListe();
         return $text;
@@ -80,8 +80,13 @@ END;
     private function renderItemListe($item) {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        $rootUri = $req->getRootUri() . "/item/$item->id";
+        $li = $this->tableau;
+        $rootUri = $req->getRootUri() . "/  liste/$li->token/item/$item->id";
         $img = $this->generateImageView($item->images);
+        $badge = "";
+        if ($item->Reservation !== null) {
+            $badge = "<span class=\"badge badge-danger\">Réservé</span>";
+        }
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">
@@ -90,7 +95,7 @@ END;
           <div class="card-body d-inline-flex">$img
             <div class="m-5">
             <br><br>
-                <h3>$item->descr</h3>
+               <div class="d-block"><h3>$item->descr</h3> $badge</div>
                 <div> $item->tarif €</div>
             <br>
             <a href="$rootUri" class="btn btn-primary btn-smal active" role="button" aria-pressed="false">Plus d'information</a>
@@ -118,11 +123,11 @@ END;
             } else {
                 $more .= "    <div class=\"carousel-item\">";
             }
-            $more .= "<img class=\"d-block w-100\" src=\"$img\" alt=\"\" width='150px' height='250px'></div>\n";
+            $more .= "<img class=\"d-block img-fluid\" style='width: 250px; height: 250px' src=\"$img\" alt=\"\" /></div>";
             $i++;
         }
         return <<<END
-<div id="carouselImg" class="carousel slide w-25" data-ride="carousel">
+<div class="carousel slide w-25" data-ride="carousel">
   <div class="carousel-inner">
     $more
   </div>
@@ -152,7 +157,7 @@ END;
        <form class="form-horizontal" method="post">
  <div class="form-row">
 <div class="form-group col-md-6">
-  <label class=control-label" for="message">Ajoutez un message à la liste</label>  
+  <label class="control-label" for="message">Ajoutez un message à la liste</label>  
   <input id="message" name="message" type="text" placeholder="Votre message" class="form-control input-md">
 </div>
       <div class="form-group col-md-6">
@@ -173,10 +178,10 @@ END;
         if (!is_null($lis)) {
             $slim = Slim::getInstance();
             $req = $slim->request;
-            $url = $req->getRootUri() . "/liste/$lis->no";
+            $url = $req->getRootUri() . "/liste/$lis->token";
             $all = <<<END
             <div class='border border-dark'>
-           <p style="transform: rotate(0);">$lis->titre / Liste numéro <a class='stretched-link' href='$url'> $lis->no</a></p>
+           <p style="transform: rotate(0);"><a class='stretched-link' href='$url'> $lis->titre</a></p>
            </div>
 END;
         }
@@ -202,7 +207,7 @@ END;
                 <div class="form-group col-md-8">
             <label class=" control-label" for="message">Message</label>
             <div class="">                     
-             <textarea name="message" class="form-control" id="message">texte</textarea>
+             <textarea name="message" class="form-control" id="message" placeholder="Votre message"></textarea>
              </div>
             </div>
 </div>
@@ -339,7 +344,6 @@ $err
 END;
     }
 
-
     private function publicListes() {
         $slim = Slim::getInstance();
         $startURL = $slim->request->getRootUri() . "/liste";
@@ -355,7 +359,7 @@ END;
   <div class="card-body">
     <h5 class="card-title">$liste->description</h5>
     <p class="card-text">il y a $msg items</p>
-    <a href="$startURL/$liste->no" class="btn btn-primary">Voir la liste</a>
+    <a href="$startURL/$liste->token" class="btn btn-primary">Voir la liste</a>
   </div>
   <div class="card-footer text-muted">
     Expire le $liste->expiration

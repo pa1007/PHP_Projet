@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\model\Images;
 use mywishlist\model\Item;
 use mywishlist\model\Liste;
+use mywishlist\model\Partage;
 use mywishlist\model\User;
 use mywishlist\vue\VueModif;
 use Slim\Slim;
@@ -108,27 +109,29 @@ class ModifController {
     private function modifyListe() {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        $liste = Liste::where("modifToken", "=", $this->token)->first();
-        $titre = $_POST['titreListe'];
-        $description = $_POST['descriptionListe'];
-        $dateEch = $_POST['dateEcheanceListe'];
-        $visCh = $_POST['Visibilite'];
-        if ($visCh === "2") {
-            $vis = 1;
-        } else {
-            $vis = 0;
-        }
-        if ($titre !== "" && $description !== "" && $dateEch !== "") {
-            $liste->titre = filter_var($titre, FILTER_SANITIZE_SPECIAL_CHARS);
-            $liste->description = filter_var($description, FILTER_SANITIZE_SPECIAL_CHARS);
-            $liste->expiration = filter_var($dateEch, FILTER_SANITIZE_SPECIAL_CHARS);
-            $liste->visible = $vis;
-            $liste->save();
-            $url = $req->getRootUri() . "/liste/$liste->no";
-            $slim->redirect($url, 302);
-        } else {
-            setCookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
-            $slim->redirect($req->getRootUri() . $req->getResourceUri(), 302);
+        if ($this->testToken()) {
+            $liste = Liste::where("modifToken", "=", $this->token)->first();
+            $titre = $_POST['titreListe'];
+            $description = $_POST['descriptionListe'];
+            $dateEch = $_POST['dateEcheanceListe'];
+            $visCh = $_POST['Visibilite'];
+            if ($visCh === "2") {
+                $vis = 1;
+            } else {
+                $vis = 0;
+            }
+            if ($titre !== "" && $description !== "" && $dateEch !== "") {
+                $liste->titre = filter_var($titre, FILTER_SANITIZE_SPECIAL_CHARS);
+                $liste->description = filter_var($description, FILTER_SANITIZE_SPECIAL_CHARS);
+                $liste->expiration = filter_var($dateEch, FILTER_SANITIZE_SPECIAL_CHARS);
+                $liste->visible = $vis;
+                $liste->save();
+                $url = $req->getRootUri() . "/liste/$liste->token";
+                $slim->redirect($url, 302);
+            } else {
+                setCookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
+                $slim->redirect($req->getRootUri() . $req->getResourceUri(), 302);
+            }
         }
 
     }
@@ -147,7 +150,6 @@ class ModifController {
             $item->descr = filter_var($descriptionP, FILTER_SANITIZE_SPECIAL_CHARS);
             $item->tarif = filter_input(INPUT_POST, 'tarif', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
             $item->liste_id = filter_var($listP, FILTER_SANITIZE_NUMBER_INT);
-            $item->img = filter_var($_POST['Image'], FILTER_SANITIZE_URL);
             $item->url = filter_var($_POST['urlEx'], FILTER_SANITIZE_URL);
             $item->save();
             $url = $req->getRootUri() . "/item/$item->id";
@@ -251,5 +253,22 @@ class ModifController {
             }
         }
         $slim->redirect($slim->urlFor('Error'), 301);
+    }
+
+    public function partagerListe() {
+        $slim = Slim::getInstance();
+        $req = $slim->request;
+        try {
+            $liste = Liste::where("modifToken", "=", $this->token)->firstOrFail();
+            $partage = new Partage();
+            $partage->idliste = $liste->no;
+            $partage->tokenpartage = bin2hex(openssl_random_pseudo_bytes(32));
+            $partage->save();
+
+            $slim->redirect($req->getRootUri() . "/modif/liste/$this->token");
+
+        } catch (ModelNotFoundException $e) {
+            $slim->redirect($slim->urlFor('Error'), 301);
+        }
     }
 }

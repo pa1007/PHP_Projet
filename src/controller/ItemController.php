@@ -13,28 +13,38 @@ class ItemController {
 
     }
 
-    public function getItem($id) {
+    public function getItem($id, $lToken) {
         $item = Item::where('id', '=', $id)->first();
-        $v = new VueParticipant($item);
-        $v->render(VueParticipant::ITEM);
+        if ($item->Liste->token === $lToken) {
+            $v = new VueParticipant($item);
+            $v->render(VueParticipant::ITEM);
+        } else {
+            $slim = Slim::getInstance();
+            $slim->redirect($slim->urlFor("Error"));
+        }
     }
 
-    public function reserverItem($id) {
+    public function reserverItem($id, $lToken) {
         $item = Item::where('id', '=', $id)->first();
         $res = Reservation::where('idItem', '=', $id)->first();
-        if (is_null($res)) {
-            if (isset($_POST['nomUtilisateur'])) {
-                $r = new Reservation();
-                $r->idItem = $id;
-                $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'], FILTER_SANITIZE_SPECIAL_CHARS);
-                $r->message = filter_var($_POST['message'], FILTER_SANITIZE_SPECIAL_CHARS);
-                $r->save();
+        if ($item->Liste->token === $lToken) {
+            if (is_null($res)) {
+                if (isset($_POST['nomUtilisateur'])) {
+                    $r = new Reservation();
+                    $r->idItem = $id;
+                    $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'], FILTER_SANITIZE_SPECIAL_CHARS);
+                    $r->message = filter_var($_POST['message'], FILTER_SANITIZE_SPECIAL_CHARS);
+                    $r->save();
+                }
             }
+            $slim = Slim::getInstance();
+            $req = $slim->request;
+            $url = $req->getRootUri() . "/liste//item/$item->id";
+            $slim->redirect($url, 302);
+        } else {
+            $slim = Slim::getInstance();
+            $slim->redirect($slim->urlFor("Error"));
         }
-        $slim = Slim::getInstance();
-        $req = $slim->request;
-        $url = $req->getRootUri() . "/item/$item->id";
-        $slim->redirect($url, 302);
 
     }
 

@@ -6,6 +6,7 @@ namespace mywishlist\vue;
 
 use mywishlist\model\Item;
 use mywishlist\model\Liste;
+use mywishlist\model\User;
 use Slim\Slim;
 
 class VueModif extends Vue {
@@ -138,19 +139,47 @@ END;
             $ret = "<option value='0'>None</option>";
         }
         foreach ($item as $value) {
-            if ($value->no === $idSel) {
-                $ret .= " <option value=\"$value->no\" selected>$value->titre / $value->no</option>";
-            } else {
-                $ret .= " <option value=\"$value->no\">$value->titre / $value->no</option>";
+            if ($this->testToken($value->modifToken)) {
+                if ($value->no === $idSel) {
+                    $ret .= " <option value=\"$value->no\" selected>$value->titre / $value->no</option>";
+                } else {
+                    $ret .= " <option value=\"$value->no\">$value->titre / $value->no</option>";
+                }
             }
         }
         return $ret;
     }
 
+    private function testToken($modifToken) {
+        if (isset($_SESSION['token'])) {
+            foreach ($_SESSION['token'] as $item) {
+                if ($item === $modifToken) {
+                    return true;
+                }
+            }
+        }
+        if (isset($_SESSION['id'])) {
+            try {
+                $id = User::where('uid', '=', $_SESSION['id']['uid'])->firstOrFail();
+                foreach ($id->listes as $item) {
+                    if ($item->modifToken === $modifToken) {
+                        return true;
+                    }
+                }
+            } catch (ModelNotFoundException $e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
     private function renderListe() {
         $u = Liste::where('modifToken', "=", $this->token)->first();
+        $slim = Slim::getInstance();
         $visPriv = !$u->visible ? "checked=\"checked\"" : "";
         $visPubl = $u->visible ? "checked=\"checked\"" : "";
+        $urlTokenAdd = $slim->request->getRootUri() . "/modif/liste/$this->token/partager";
+        $tokens = $this->getAllTokens($u, $slim);
         return <<<END
 <form class="form-horizontal" method="post">
 <fieldset>
@@ -206,12 +235,29 @@ END;
     <button id="butValider" name="butValider" class="btn btn-primary">Valider</button>
   </div>
 </div>
-
 </fieldset>
 </form>
-
+<form class="" method="post" action="$urlTokenAdd">
+<div class="col-md-4">
+<input class="btn-danger btn col-md-4" value="Partager" type="submit">
+</div>
+</form>
+$tokens
 END;
 
+    }
+
+    private function getAllTokens($liste, $slim) {
+        $tokens = $liste->partages;
+        $text = "<div class='d-inline-block'><ul>";
+        foreach ($tokens as $token) {
+            $request = $slim->request;
+            $url = $request->getRootUri() . "/participe/$token->tokenpartage";
+            $urlD = $request->getHost() . $url;
+            $text .= "<li><a href='$url'>$urlD</a></li>";
+        }
+        $text .= "</ul></div>";
+        return $text;
     }
 
     private function renderItemChangeImage() {
