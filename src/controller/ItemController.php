@@ -2,6 +2,7 @@
 
 namespace mywishlist\controller;
 
+use mywishlist\model\Cagnotte;
 use mywishlist\model\Item;
 use mywishlist\model\Reservation;
 use mywishlist\vue\VueParticipant;
@@ -14,12 +15,69 @@ class ItemController {
     }
 
     public function getItem($id, $lToken) {
+        $slim = Slim::getInstance();
         $item = Item::where('id', '=', $id)->first();
         if ($item->Liste->token === $lToken) {
-            $v = new VueParticipant($item);
+            $reserv = $item->Reservation;
+            if (is_null($reserv)) {
+                $name = "";
+                if (isset($_SESSION['id'])) {
+                    $name = $_SESSION['id']['login'];
+                }
+                $res = <<<END
+            <form class="" method="POST">
+              <fieldset>
+                <legend>Reservation</legend>
+                  <div class="form-row">
+                  <div class="form-group col-md-8">
+                    <label class="control-label" for="nomUtilisateur">Utilisateur</label>  
+                      <div class="">
+                      <input name="nomUtilisateur" class="form-control input-md" id="nomUtilisateur" type="text" placeholder="nom" value="$name">
+                      </div>
+                  </div>
+                <div class="form-group col-md-8">
+            <label class=" control-label" for="message">Message</label>
+            <div class="">                     
+             <textarea name="message" class="form-control" id="message" placeholder="Votre message"></textarea>
+             </div>
+            </div>
+</div>
+<div class="form-row d-inline">
+<input role="button" name="submit" type="submit" class="btn btn-success" value="Reserver">
+END;
+                if (ModifController::testToken($item->Liste->modifToken)) {
+                    $res .= "<input role=\"button\" name=\"submit\" type=\"submit\" class=\"btn btn-info\" value=\"Créée une cagnotte !\">";
+                }
+                $res .= "</div></fieldset></form>";
+            } elseif ($reserv->type == "CAGNOTTE") {
+                $cagnotte = $item->cagnotte;
+                $vGet = $cagnotte->valeur;
+                $act = $slim->request->getRootUri() . $slim->request->getResourceUri() . "/cadd";
+                $w = ($vGet / $item->tarif) * 100;
+                $res = <<<END
+            <div class="progress">
+  <div class="progress-bar" role="progressbar" style="width:$w%;" aria-valuenow="$vGet" aria-valuemin="0" aria-valuemax="$item->tarif">$vGet</div>
+    </div>
+END;
+                if ($w != 100) {
+                    $res .= <<<END
+<form method="post" action="$act">
+<br>
+<div class="form-row d-inline">
+ <label for="montant">le montant que vous voulez ajouter : &emsp;</label>
+ <input type="number" placeholder="montant" name="Montant" step="any"></div>
+ <input type="submit" class="btn btn-danger ml-5">
+</form>
+END;
+                } else {
+                    $res .= "<p>Cagnotte remplie !</p>";
+                }
+            } else {
+                $res = "<p>Item reservé</p>";
+            }
+            $v = new VueParticipant(["item" => $item, "reservation" => $res]);
             $v->render(VueParticipant::ITEM);
         } else {
-            $slim = Slim::getInstance();
             $slim->redirect($slim->urlFor("Error"));
         }
     }
@@ -30,16 +88,25 @@ class ItemController {
         if ($item->Liste->token === $lToken) {
             if (is_null($res)) {
                 if (isset($_POST['nomUtilisateur'])) {
+                    $uti = $_POST['nomUtilisateur'];
+                    $message = $_POST['message'];
                     $r = new Reservation();
                     $r->idItem = $id;
-                    $r->nomUtilisateur = filter_var($_POST['nomUtilisateur'], FILTER_SANITIZE_SPECIAL_CHARS);
-                    $r->message = filter_var($_POST['message'], FILTER_SANITIZE_SPECIAL_CHARS);
+                    $r->nomUtilisateur = filter_var($uti, FILTER_SANITIZE_SPECIAL_CHARS);
+                    $r->message = filter_var($message, FILTER_SANITIZE_SPECIAL_CHARS);
+                    if (isset($_POST['submit']) && $_POST['submit'] === "Créée une cagnotte !") {
+                        $r->type = "CAGNOTTE";
+                        $c = new Cagnotte();
+                        $c->id_item = $id;
+                        $c->valeur = 0;
+                        $c->save();
+                    }
                     $r->save();
                 }
             }
             $slim = Slim::getInstance();
             $req = $slim->request;
-            $url = $req->getRootUri() . "/liste//item/$item->id";
+            $url = $req->getRootUri() . "/liste/$lToken/item/$item->id";
             $slim->redirect($url, 302);
         } else {
             $slim = Slim::getInstance();
@@ -80,6 +147,24 @@ class ItemController {
         } else {
             setcookie("Error", "Il y a une erreur dans le formulaire", time() + 10);
             $slim->redirect($slim->urlFor("creaItem"), 302);
+        }
+    }
+
+    public function addCagnotte($id, $lToken) {
+        $item = Item::where('id', '=', $id)->first();
+        $res = Reservation::where('idItem', '=', $id)->first();
+        $slim = Slim::getInstance();
+        $cagnotte = $item->cagnotte;
+        if ($item->Liste->token === $lToken && $cagnotte !== null && isset($_POST['Montant'])) {
+            $montant = filter_input(INPUT_POST, 'Montant', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            if ($cagnotte->valeur + $montant <= $item->tarif) {
+                $cagnotte->valeur = $cagnotte->valeur + $montant;
+                $cagnotte->save();
+            }
+            $url = $slim->request->getRootUri() . "/liste/$lToken/item/$id";
+            $slim->redirect($url, 302);
+        } else {
+            $slim->redirect($slim->urlFor("Error"));
         }
     }
 }

@@ -21,4 +21,8 @@ class Item extends Model {
         return $this->hasMany("mywishlist\model\Images", "id_item");
     }
 
+    public function cagnotte() {
+        return $this->hasOne('mywishlist\model\Cagnotte', "id_item");
+    }
+
 }

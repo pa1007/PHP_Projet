@@ -4,6 +4,7 @@
 namespace mywishlist\controller;
 
 
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\model\Images;
 use mywishlist\model\Item;
@@ -33,7 +34,7 @@ class ModifController {
         switch ($this->type) {
             case "liste":
                 $itemT = Liste::where("modifToken", "=", $this->token)->first();
-                if ($itemT !== null && $this->testToken()) {
+                if ($itemT !== null && self::testToken($this->token)) {
                     $vueModif = new VueModif($this->token);
                     $vueModif->render(VueModif::LISTE);
                 } else {
@@ -42,7 +43,7 @@ class ModifController {
                 break;
             case "item":
                 $listeT = Item::where("modifToken", "=", $this->token)->first();
-                if ($listeT !== null && $this->testToken()) {
+                if ($listeT !== null && self::testToken($this->token)) {
                     $vueModif = new VueModif($this->token);
                     $vueModif->render(VueModif::ITEM);
                 } else {
@@ -55,10 +56,10 @@ class ModifController {
         }
     }
 
-    private function testToken() {
+    public static function testToken($token) {
         if (isset($_SESSION['token'])) {
             foreach ($_SESSION['token'] as $item) {
-                if ($item === $this->token) {
+                if ($item === $token) {
                     return true;
                 }
             }
@@ -67,7 +68,7 @@ class ModifController {
             try {
                 $id = User::where('uid', '=', $_SESSION['id']['uid'])->firstOrFail();
                 foreach ($id->listes as $item) {
-                    if ($item->modifToken === $this->token) {
+                    if ($item->modifToken === $token) {
                         return true;
                     }
                 }
@@ -84,14 +85,14 @@ class ModifController {
         try {
             switch ($this->type) {
                 case "liste":
-                    if ($this->testToken()) {
+                    if (self::testToken($this->token)) {
                         $this->modifyListe();
                     } else {
                         $slim->redirect($slim->urlFor('Error'), 301);
                     }
                     break;
                 case "item":
-                    if ($this->testToken()) {
+                    if (self::testToken($this->token)) {
                         $this->modifyItem();
                     } else {
                         $slim->redirect($slim->urlFor('Error'), 301);
@@ -109,7 +110,7 @@ class ModifController {
     private function modifyListe() {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        if ($this->testToken()) {
+        if (self::testToken($this->token)) {
             $liste = Liste::where("modifToken", "=", $this->token)->first();
             $titre = $_POST['titreListe'];
             $description = $_POST['descriptionListe'];
@@ -155,7 +156,7 @@ class ModifController {
 
             try {
                 $token = $item->Liste->token;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 setcookie("Error", "Pour voir un item il lui faut une liste", time() + 10);
                 $url = $req->getRootUri() . "/modif/$this->type/$this->token";
                 $slim->redirect($url, 302);
@@ -175,7 +176,7 @@ class ModifController {
         try {
             switch ($this->type) {
                 case "liste":
-                    if ($this->testToken()) {
+                    if (self::testToken($this->token)) {
                         $list = Liste::where("modifToken", "=", $this->token)->firstOrFail();
                         $list->delete();
                         $slim->redirect($slim->urlFor('Menu'), 302);
@@ -184,7 +185,7 @@ class ModifController {
                     }
                     break;
                 case "item":
-                    if ($this->testToken()) {
+                    if (self::testToken($this->token)) {
                         $item = Item::where("modifToken", "=", $this->token)->firstOrFail();
                         $item->delete();
                         $slim->redirect($slim->urlFor('Menu'), 302);
@@ -205,7 +206,7 @@ class ModifController {
     public function changeImageForm() {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        if ($this->testToken()) {
+        if (self::testToken($this->token)) {
             $vueModif = new VueModif($this->token);
             $vueModif->render(VueModif::ITEM_IMAGE_CHANGE);
         } else {
@@ -216,7 +217,7 @@ class ModifController {
     public function modifyImage() {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        if ($this->testToken()) {
+        if (self::testToken($this->token)) {
             $u = Item::where('modifToken', '=', $this->token)->first();
             $im = new Images();
 
@@ -248,7 +249,7 @@ class ModifController {
     public function deleleImage($id) {
         $slim = Slim::getInstance();
         $req = $slim->request;
-        if ($this->testToken()) {
+        if (self::testToken($this->token)) {
             $item = Item::where("modifToken", "=", $this->token)->first();
             foreach ($item->images as $image) {
                 if ($image->id_image == $id) {

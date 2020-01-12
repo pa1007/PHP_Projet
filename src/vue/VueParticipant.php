@@ -81,7 +81,7 @@ END;
         $slim = Slim::getInstance();
         $req = $slim->request;
         $li = $this->tableau;
-        $rootUri = $req->getRootUri() . "/  liste/$li->token/item/$item->id";
+        $rootUri = $req->getRootUri() . "/liste/$li->token/item/$item->id";
         $img = $this->generateImageView($item->images);
         $badge = "";
         if ($item->Reservation !== null) {
@@ -170,9 +170,8 @@ END;
     }
 
     private function renderItem() {
-        $item = $this->tableau;
+        $item = $this->tableau['item'];
         $lis = $item->Liste;
-        $reserv = $item->Reservation;
         $all = "";
         $img = $this->generateImageView($item->images);
         if (!is_null($lis)) {
@@ -185,36 +184,7 @@ END;
            </div>
 END;
         }
-        $form = <<<END
-            <p>Item reservé</p>
-END;
-        if (is_null($reserv)) {
-            $name = "";
-            if (isset($_SESSION['id'])) {
-                $name = $_SESSION['id']['login'];
-            }
-            $form = <<<END
-            <form class="" method="POST">
-              <fieldset>
-                <legend>Reservation</legend>
-                  <div class="form-row">
-                  <div class="form-group col-md-8">
-                    <label class="control-label" for="nomUtilisateur">Utilisateur</label>  
-                      <div class="">
-                      <input name="nomUtilisateur" class="form-control input-md" id="nomUtilisateur" type="text" placeholder="nom" value="$name">
-                      </div>
-                  </div>
-                <div class="form-group col-md-8">
-            <label class=" control-label" for="message">Message</label>
-            <div class="">                     
-             <textarea name="message" class="form-control" id="message" placeholder="Votre message"></textarea>
-             </div>
-            </div>
-</div>
-              </fieldset>
-            </form>
-END;
-        }
+        $form = $this->tableau['reservation'];
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">

@@ -59,8 +59,8 @@ Il vous suffit d'importer la base de donnée puis d'allumer votre serveur XAMPP
 |19 Modifier son compte |Paul-Alexandre Fourrière||
 |20 Rendre une liste publique |Paul-Alexandre Fourrière||
 |21 Afficher les listes de souhaits publiques|Paul-Alexandre Fourrière||
-|22 Créer une cagnotte sur un item | PAS ENCORE FAIT||
-|23 Participer à une cagnotte|PAS ENCORE FAIT||
+|22 Créer une cagnotte sur un item | Paul-Alexandre Fourrière||
+|23 Participer à une cagnotte|Paul-Alexandre Fourrère||
 |24 Uploader une image|Paul-Alexandre Fourrière||
 |25 Créer un compte participant|PAS ENCORE FAIT||
 |26 Afficher la liste des créateurs |PAS ENCORE FAIT||

@@ -6,8 +6,7 @@ namespace mywishlist\model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cagnotte extends Model
-{
+class Cagnotte extends Model {
 
     public $timestamps = false;
     protected $table = "cagnotte";

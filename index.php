@@ -13,6 +13,13 @@ use Slim\Slim;
 require_once __DIR__ . '/vendor/autoload.php';
 session_start();
 $app = new Slim;
+
+$app->notFound(function () {
+    $vueError = new VueError();
+    $vueError->render(1);
+});
+
+
 $app->get('/liste/:no/item/:id', function ($no, $id) {
     $itemController = new ItemController();
     $itemController->getItem($id, $no);
@@ -103,7 +110,10 @@ $app->post("/liste/:token/item/:id", function ($token, $id) {
     $reserv = new ItemController();
     $reserv->reserverItem($id, $token);
 });
-
+$app->post('/liste/:no/item/:id/cadd', function ($no, $id) {
+    $itemController = new ItemController();
+    $itemController->addCagnotte($id, $no);
+});
 $app->get('/connect', function () {
     $cCont = new CompteController();
     $cCont->formConn();
