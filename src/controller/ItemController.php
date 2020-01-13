@@ -43,7 +43,7 @@ class ItemController {
             </div>
 </div>
 <div class="form-row d-inline">
-<input role="button" name="submit" type="submit" class="btn btn-success" value="Reserver">
+<input name="submit" type="submit" class="btn btn-success" value="Reserver">
 END;
                 if (ModifController::testToken($item->Liste->modifToken)) {
                     $res .= "<input role=\"button\" name=\"submit\" type=\"submit\" class=\"btn btn-info\" value=\"Créée une cagnotte !\">";

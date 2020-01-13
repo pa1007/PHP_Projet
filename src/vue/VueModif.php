@@ -208,20 +208,20 @@ END;
 <div class="form-group">
   <label class="col-md-4 control-label" for="dateEcheanceListe">Date d'échéance</label>  
   <div class="col-md-4">
-  <input id="dateEcheanceListe" name="dateEcheanceListe" type="date" placeholder="" class="form-control input-md" value="$u->expiration">
+  <input id="dateEcheanceListe" name="dateEcheanceListe" type="date" class="form-control input-md" value="$u->expiration">
   </div>
 </div>
 <div class="form-group">
-  <label class="col-md-4 control-label" for="Visibilite">Visibilité</label>
+  <label class="col-md-4 control-label">Visibilité</label>
   <div class="col-md-4">
   <div class="radio">
-    <label for="Visibilite-0">
+    <label>
       <input type="radio" name="Visibilite" id="Visibilite-0" value="1" $visPriv>
       Privé
     </label>
 	</div>
   <div class="radio">
-    <label for="Visibilite-1">
+    <label>
       <input type="radio" name="Visibilite" id="Visibilite-1" value="2" $visPubl>
       Publique
     </label>

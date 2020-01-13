@@ -134,7 +134,7 @@ class CompteController {
       <h4 class=\"card-title\">$liste->titre</h4>
       <p class=\"card-text\">$liste->description</p>
       <p class=\"card-text\">$liste->expiration</p>
-      <a type=\"button\" class=\"btn btn-light-blue btn-md\" href='$url$liste->modifToken'>Modifier</a>
+      <a class=\"btn btn-light-blue btn-md\" href='$url$liste->modifToken'>Modifier</a>
     </div>
   </div>";
                 $c++;

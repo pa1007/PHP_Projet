@@ -61,7 +61,7 @@ END;
 
         return <<<END
 <form method="post">
-<legend>Créer votre compte utilisateur !</legend>
+<H5>Créer votre compte utilisateur !</H5>
     <div class="form-row">
       <div class="form-group col-md-6">
       <label for="name">Nom</label>
@@ -100,7 +100,7 @@ END;
         $url = $request->getRootUri() . "/createcompte";
         return <<<END
     <form method="post">
-    <legend>Connexion</legend>
+    <h4>Connexion</h4>
       <div class="form-row">
       <div class="form-group col-md-6">
       <label for="login">Login</label>
@@ -161,7 +161,7 @@ END;
   <div class="form-row">
       <div class="form-group col-md-6">
       <label for="login">Login</label>
-      <input class="form-control disabled" disabled placeholder="login" required value="$u->login">
+      <input class="form-control disabled" disabled placeholder="login" id="login" required value="$u->login">
     </div>
      <div class="form-group col-md-6">
       <label for="mail">Mail</label>
@@ -214,7 +214,7 @@ END;
       $this->listes
        <div class="form">
           <form class="form-check" method="post" action="$formURL">
-          <label><h5>Ajoutez un token de modification</h5></label>
+          <h5>Ajoutez un token de modification</h5>
 		  <div><input name="modifTokAdd" type="text" class="form-control" placeholder="token"/></div>
 		  <div><input type="submit"></div>
           </form>
