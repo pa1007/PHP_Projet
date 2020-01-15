@@ -53,7 +53,7 @@ Il vous suffit d'importer la base de donnée puis d'allumer votre serveur XAMPP
 |13 Supprimer une image d'un item |Matthias Froehlicher||
 |14 Partager une liste|Paul-Alexandre Fourrière ||
 |15 Consulter les réservations d'une de ses listes avant échéance|Paul-Alexandre Fourrière & Fabien Drommer||
-|16 Consulter les réservations et messages d'une de ses listes après échéance | PAS ENCORE FAIT||
+|16 Consulter les réservations et messages d'une de ses listes après échéance | Fabien Drommer & Paul-Alexandre Fourrière||
 |17 Créer un compte|Paul-Alexandre Fourrière||
 |18 S'authentifier|Paul-Alexandre Fourrière||
 |19 Modifier son compte |Paul-Alexandre Fourrière||
