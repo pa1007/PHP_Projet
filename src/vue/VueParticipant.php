@@ -88,9 +88,22 @@ END;
         $rootUri = $req->getRootUri() . "/liste/$li->token/item/$item->id";
         $img = $this->generateImageView($item->images);
         $badge = "";
+
+
+        $lis = $item->Liste;
+        $reserv = $item->Reservation;
+
+        $val = "<a href=\"$rootUri\" class=\"btn btn-primary btn-smal active\" role=\"button\" aria-pressed=\"false\">Plus d'information</a>";
         if ($item->Reservation !== null) {
             $badge = "<span class=\"badge badge-danger\">Réservé</span>";
+            if ($lis->hasExpire()) {
+
+                $val = "Réservation de : " . $reserv->nomUtilisateur . "<br>";
+                $val .= "Message de réservation : " . $reserv->message;
+            }
         }
+
+
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">
@@ -102,7 +115,7 @@ END;
                <div class="d-block"><h3>$item->descr</h3> $badge</div>
                 <div> $item->tarif €</div>
             <br>
-            <a href="$rootUri" class="btn btn-primary btn-smal active" role="button" aria-pressed="false">Plus d'information</a>
+            $val
             </div>
           </div>
           </div>
