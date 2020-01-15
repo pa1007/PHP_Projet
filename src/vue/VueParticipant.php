@@ -201,7 +201,11 @@ END;
            </div>
 END;
         }
-        $form = $this->tableau['reservation'];
+        if (!$lis->hasExpire()) {
+            $form = $this->tableau['reservation'];
+        } else {
+            $form = "";
+        }
         return <<<END
         <div class="card mb-4 box-shadow">
           <div class="card-header">
