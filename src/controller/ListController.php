@@ -94,24 +94,51 @@ class ListController {
         }
     }
 
-    public function verifListePublique(){
-        $u =User::all();
-        $html = "";
-        $b=0;
-
+    public function verifListePublique() {
+        $u = User::all();
+        $slim = Slim::getInstance();
+        $html = "<div>";
+        $startURL = $slim->request->getRootUri() . "/liste";
         foreach ($u as $user) {
             $listes = $user->listes;
+            $dis = 0;
+            $userLis = "";
             foreach ($listes as $liste) {
-                if ($liste->visible == 1) {
-                        if ($b==0) {
-                            $html .= "- "."$user->nom" ." "."$user->prenom". "<br>";
-                        }
-                        $b=1;
+                if ($liste->visible == 1 && !$liste->hasExpire()) {
+                    $dis = 1;
+                    $userLis .= <<<END
+<div class="card text-center"> 
+  <div class="card-header">
+    <h3>$liste->titre</h3>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">$liste->description</h5>
+
+    <a href="$startURL/$liste->token" class="btn btn-primary">Voir la liste</a>
+  </div>
+  <div class="card-footer text-muted">
+    Expire le $liste->expiration
+  </div>
+</div><br>
+END;
                 }
             }
-            $b=0;
-        }
+            if ($dis > 0) {
+                $html .= <<<END
+<div class="card">
+<div class="card-header">
+<h3> Fait par : $user->nom $user->prenom</h3>
+</div>
+<div class="card-body">
+$userLis
+</div>
+</div> <br>
+END;
 
+            }
+
+        }
+        $html .= "</div>";
         $v = new VueParticipant($html);
         $v->render(VueParticipant::LIST_CREATEUR_PUBLICS);
     }

@@ -63,7 +63,7 @@ Il vous suffit d'importer la base de donnée puis d'allumer votre serveur XAMPP
 |23 Participer à une cagnotte|Paul-Alexandre Fourrère||
 |24 Uploader une image|Paul-Alexandre Fourrière||
 |25 Créer un compte participant|PAS ENCORE FAIT||
-|26 Afficher la liste des créateurs |PAS ENCORE FAIT||
+|26 Afficher la liste des créateurs |Paul-Alexandre Fourrière & Matthias Froehlicher||
 |27 Supprimer son compte|Paul-Alexandre Fourrière||
 |28 Joindre des listes à son compte|Paul-Alexandre Fourrière||
 ||||

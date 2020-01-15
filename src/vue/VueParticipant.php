@@ -345,8 +345,7 @@ END;
         return $ex;
     }
 
-    private function renderCreateur()
-    {
+    private function renderCreateur() {
         return <<<END
 <div>
 Voici les créateurs qui ont partagé leurs listes :
