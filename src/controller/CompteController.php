@@ -107,6 +107,7 @@ class CompteController {
                     $vueCompte->render(VueCompte::AUFMODIFCOMPTE);
                     break;
                 default:
+                    $vueCompte->reserv = $this->generateReserv($slim);
                     $vueCompte->render(VueCompte::NORMAL);
                     break;
             }
@@ -144,6 +145,32 @@ class CompteController {
             $slim->redirect($slim->urlFor("Error"), 301);
         }
         return "ERROR";
+    }
+
+    private function generateReserv($slim) {
+
+        $u = User::find($_SESSION['id']['uid']);
+        $b = 0;
+        $html = "<h5>Vous avez réservé : </h5><ul>";
+        if ($u !== null) {
+            $base = $slim->request->getRootUri() . '/liste/';
+            $reservation = $u->reservation;
+            foreach ($reservation as $res) {
+                $it = $res->Item;
+                $liste = $it->Liste->token;
+                $url = $base . $liste . "/item/$it->id";
+                $html .= "<li> <a href='$url'><u>$it->nom</u></a> pour le prix de $it->tarif € </li>";
+                $b++;
+            }
+            if ($b === 0) {
+                $html .= "<li> Vous n'avez encore rien réservé </li>";
+            }
+            return $html . "</ul>";
+
+        } else {
+            $slim->redirect($slim->urlFor("Error"), 301);
+        }
+        return "";
     }
 
     public function addToken() {
@@ -214,7 +241,6 @@ class CompteController {
         $slim->redirect($slim->urlFor('Menu'));
     }
 
-
     public function deleteCompte() {
         $slim = Slim::getInstance();
         $url = $slim->request->getRootUri();
@@ -241,7 +267,6 @@ class CompteController {
             $slim->redirect($slim->urlFor("Error"), 301);
         }
     }
-
 
 
 }

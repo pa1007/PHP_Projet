@@ -15,6 +15,7 @@ class   VueCompte extends Vue {
     private $message;
     private $listes;
     private $user;
+    private $reserv;
 
     public function __construct($message = "") { $this->message = $message; }
 
@@ -248,7 +249,9 @@ END;
   <div class="col-9">
     <div class="tab-content" id="v-pills-tabContent">
       <div>
-      
+       <div> 
+            <div>$this->reserv</div>
+       </div>
 </div>
     </div>
   </div>

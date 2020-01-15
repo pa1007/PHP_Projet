@@ -11,7 +11,7 @@ class Reservation extends Model{
     protected $table = "reservation";
 
     public function Item() {
-        return $this->hasMany('mywishlist\model\Item');
+        return $this->hasOne('mywishlist\model\Item','id');
     }
 
 }

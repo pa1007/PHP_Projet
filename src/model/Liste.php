@@ -20,8 +20,8 @@ class Liste extends Model {
         return $this->hasMany("mywishlist\model\Commentaire", 'liste_id');
     }
 
-    public function partages(){
-        return $this->hasMany("mywishlist\model\Partage","idliste");
+    public function partages() {
+        return $this->hasMany("mywishlist\model\Partage", "idliste");
     }
 
     public function hasExpire(): bool {

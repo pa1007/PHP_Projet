@@ -101,6 +101,9 @@ END;
                         $c->valeur = 0;
                         $c->save();
                     }
+                    if (isset($_SESSION['id'])) {
+                        $r->userID = $_SESSION['id']['uid'];
+                    }
                     $r->save();
                 }
             }
