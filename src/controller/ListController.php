@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use mywishlist\model\Commentaire;
 use mywishlist\model\Liste;
 use mywishlist\model\Partage;
+use mywishlist\model\User;
 use mywishlist\vue\VueParticipant;
 use Slim\Slim;
 
@@ -91,5 +92,27 @@ class ListController {
         } catch (ModelNotFoundException $e) {
             $slim->redirect($slim->urlFor('Error'));
         }
+    }
+
+    public function verifListePublique(){
+        $u =User::all();
+        $html = "";
+        $b=0;
+
+        foreach ($u as $user) {
+            $listes = $user->listes;
+            foreach ($listes as $liste) {
+                if ($liste->visible == 1) {
+                        if ($b==0) {
+                            $html .= "- "."$user->nom" ." "."$user->prenom". "<br>";
+                        }
+                        $b=1;
+                }
+            }
+            $b=0;
+        }
+
+        $v = new VueParticipant($html);
+        $v->render(VueParticipant::LIST_CREATEUR_PUBLICS);
     }
 }

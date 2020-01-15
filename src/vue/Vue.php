@@ -35,7 +35,7 @@ abstract class Vue {
         <a class=\"p-2 text-dark\" href=\"$u/createliste\">Créer une liste</a>
         <a class=\"p-2 text-dark\" href=\"$u/createitem\">Créer un item</a>
         <a class=\"p-2 text-dark\" href=\"$u/publique\">Liste publique</a>
-        <a class=\"p-2 text-dark\" href=\"#\">Page 4</a>
+        <a class=\"p-2 text-dark\" href=\"$u/createur\">Créateur</a>
       </nav>
       $url
     </div>";

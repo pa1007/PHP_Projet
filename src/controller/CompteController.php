@@ -241,4 +241,7 @@ class CompteController {
             $slim->redirect($slim->urlFor("Error"), 301);
         }
     }
+
+
+
 }

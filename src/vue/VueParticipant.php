@@ -12,6 +12,7 @@ class VueParticipant extends Vue {
     const ITEM_CREA = 4;
     const LIST_CREA = 5;
     const PUBLIC = 6;
+    const LIST_CREATEUR_PUBLICS = 7;
 
     protected $tableau;
 
@@ -49,6 +50,9 @@ class VueParticipant extends Vue {
                 break;
             case VueParticipant::PUBLIC :
                 $content = $this->publicListes();
+                break;
+            case VueParticipant::LIST_CREATEUR_PUBLICS:
+                $content = $this->renderCreateur();
                 break;
         }
         $html = <<<END
@@ -339,6 +343,17 @@ END;
             }
         }
         return $ex;
+    }
+
+    private function renderCreateur()
+    {
+        return <<<END
+<div>
+Voici les créateurs qui ont partagé leurs listes :
+</div>
+$this->tableau
+END;
+
     }
 }
 

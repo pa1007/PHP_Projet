@@ -124,6 +124,11 @@ $app->post('/connect', function () {
     $cCont->auth();
 });
 
+$app->get('/createur',function(){
+    $lc = new ListController();
+    $lc->verifListePublique();
+});
+
 $app->get('/connected/', function () {
     $cCont = new CompteController();
     $cCont->connected();

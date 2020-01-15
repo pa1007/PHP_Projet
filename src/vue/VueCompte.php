@@ -11,6 +11,7 @@ class   VueCompte extends Vue {
     const AUFMODIFCOMPTE = 31;
     const AUFSEELISTES = 32;
     const NORMAL = 30;
+    const CREATEUR = 5;
     private $message;
     private $listes;
     private $user;
@@ -42,6 +43,8 @@ END;
             case self::NORMAL:
                 $cont .= $this->renderAufMenu();
                 break;
+            case self::CREATEUR:
+                $cont .=$this->renderCreateur();
         }
         $head = parent::renduTitre();
         $menu = parent::renduMenu();
@@ -259,5 +262,6 @@ END;
             $this->$property = $value;
         }
     }
+
 
 }
