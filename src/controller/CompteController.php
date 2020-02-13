@@ -232,7 +232,7 @@ class CompteController {
         } else {
             $slim->redirect($slim->urlFor("Error"), 301);
         }
-        $slim->redirect($url . "/connected");
+        $slim->redirect($url . "/moncompte");
     }
 
     public function logout() {
